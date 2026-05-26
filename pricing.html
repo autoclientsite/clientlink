@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pricing — Clientlink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ---------------- Page hero ---------------- */
+  .pricing-hero { padding:180px 0 60px; position:relative; overflow:hidden; }
+  .pricing-hero h1 { max-width:14ch; }
+  .pricing-hero .lead { margin-top:28px; }
+  .billing-toggle {
+    display:inline-flex; align-items:center;
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:999px; padding:4px;
+    margin-top:40px;
+    box-shadow:var(--shadow-inset);
+  }
+  .billing-toggle button {
+    background:transparent; border:none; cursor:pointer;
+    padding:10px 22px; border-radius:999px;
+    font-family:var(--font-body); font-weight:600; font-size:13.5px;
+    color:var(--ink-8);
+    display:inline-flex; align-items:center; gap:8px;
+    transition:all .2s var(--ease-out);
+  }
+  .billing-toggle button.active {
+    background:var(--brand-gradient); color:#0B1A1A;
+    box-shadow:0 0 0 1px rgba(45,212,208,.4), 0 0 24px rgba(45,212,208,.25);
+  }
+  .billing-toggle .save-tag {
+    background:rgba(168,224,99,.18); color:var(--brand-lime);
+    padding:2px 8px; border-radius:999px;
+    font-size:10.5px; font-weight:700;
+  }
+  .billing-toggle button.active .save-tag {
+    background:rgba(0,0,0,.18); color:#0B1A1A;
+  }
+
+  /* ---------------- Plans ---------------- */
+  .plans { padding:40px 0 100px; }
+  .plans-grid {
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+    align-items:stretch;
+  }
+  @media (max-width:1000px){ .plans-grid { grid-template-columns:1fr; gap:20px; } }
+
+  .plan {
+    background:var(--ink-2);
+    border:1px solid var(--line-soft);
+    border-radius:20px;
+    padding:36px 32px;
+    display:flex; flex-direction:column;
+    position:relative;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    transition:all .25s var(--ease-out);
+  }
+  .plan:hover {
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-pop), var(--shadow-inset);
+  }
+  .plan.featured {
+    border-color:rgba(45,212,208,.45);
+    box-shadow:var(--shadow-pop), var(--shadow-inset), 0 0 60px rgba(45,212,208,.10);
+    background:linear-gradient(180deg, rgba(45,212,208,.04) 0%, var(--ink-2) 30%);
+  }
+  .plan.featured::before{
+    content:""; position:absolute; inset:-1px;
+    border-radius:21px; padding:1px;
+    background:linear-gradient(135deg, rgba(45,212,208,.6), rgba(168,224,99,.3) 50%, transparent 80%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    pointer-events:none;
+  }
+  .plan .ribbon {
+    position:absolute; top:-12px; left:32px;
+    background:var(--brand-gradient); color:#0B1A1A;
+    font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    padding:6px 12px; border-radius:999px;
+    box-shadow:0 0 24px rgba(45,212,208,.4);
+  }
+  .plan-name {
+    font-family:var(--font-display); font-size:32px;
+    text-transform:uppercase; letter-spacing:.005em;
+    color:#fff; margin-bottom:6px;
+  }
+  .plan-tag { font-size:13.5px; color:var(--ink-7); margin-bottom:28px; }
+  .plan-price {
+    display:flex; align-items:flex-end; gap:6px;
+    margin-bottom:6px;
+  }
+  .plan-price .currency { font-size:22px; color:var(--ink-8); font-weight:500; margin-bottom:18px; }
+  .plan-price .num {
+    font-family:var(--font-display); font-size:88px;
+    color:#fff; line-height:.9; letter-spacing:-.01em;
+  }
+  .plan.featured .plan-price .num {
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .plan-price .per { font-size:14px; color:var(--ink-7); margin-bottom:12px; }
+  .plan-price .alt {
+    font-size:12.5px; color:var(--ink-7); margin-bottom:14px;
+    text-decoration:line-through;
+  }
+  .plan-billed { font-size:12.5px; color:var(--ink-7); margin-bottom:28px; }
+  .plan-billed.has-strike strong { color:var(--brand-lime); font-weight:700; }
+  .plan .btn { width:100%; justify-content:center; margin-bottom:28px; }
+  .plan-includes {
+    font-size:11.5px; text-transform:uppercase; letter-spacing:.14em;
+    color:var(--ink-7); font-weight:600;
+    margin-bottom:14px;
+  }
+  .plan ul {
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:12px;
+    flex:1;
+  }
+  .plan ul li {
+    display:flex; align-items:flex-start; gap:10px;
+    font-size:14px; color:var(--ink-9); line-height:1.5;
+  }
+  .plan ul li svg {
+    flex:none; color:var(--brand-cyan); margin-top:3px;
+  }
+  .plan ul li .meta { color:var(--ink-7); font-size:12.5px; margin-left:4px; }
+
+  /* ---------------- Stack saver ---------------- */
+  .saver {
+    margin-top:80px;
+    background:var(--ink-2);
+    border:1px solid var(--line-soft);
+    border-radius:20px;
+    padding:36px;
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:48px;
+    align-items:center;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    position:relative; overflow:hidden;
+  }
+  .saver::before {
+    content:""; position:absolute;
+    right:-80px; top:-40px; width:380px; height:380px;
+    background:radial-gradient(circle, rgba(168,224,99,.15) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .saver h3 { font-size:48px; margin:0; }
+  .saver p { color:var(--ink-8); margin:18px 0 0; max-width:48ch; font-size:15.5px; }
+  .saver-cards {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    position:relative; z-index:1;
+  }
+  .saver-card {
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    border-radius:12px; padding:14px;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .saver-card .ln { font-size:12px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.1em; font-weight:600; }
+  .saver-card .val {
+    font-family:var(--font-display); font-size:36px; line-height:1;
+    color:#fff;
+  }
+  .saver-card.gradient .val {
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .saver-card .sub { font-size:12px; color:var(--ink-7); }
+  @media (max-width:900px){ .saver { grid-template-columns:1fr; } }
+
+  /* ---------------- Compare table ---------------- */
+  .compare { padding:120px 0; border-top:1px solid var(--line-soft); }
+  .compare-head { margin-bottom:48px; max-width:760px; }
+  .ctable {
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    background:var(--ink-2);
+    border:1px solid var(--line-soft);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow-md);
+  }
+  .ctable thead th {
+    text-align:left;
+    padding:24px 24px 20px;
+    font-family:var(--font-display); font-size:28px;
+    text-transform:uppercase; color:#fff;
+    border-bottom:1px solid var(--line-soft);
+    background:var(--ink-3);
+    vertical-align:bottom;
+  }
+  .ctable thead th .price-mini {
+    display:block; font-family:var(--font-body); font-size:13px; color:var(--ink-8);
+    font-weight:500; text-transform:none; margin-top:6px;
+  }
+  .ctable thead th.featured {
+    background:linear-gradient(180deg, rgba(45,212,208,.10) 0%, var(--ink-3) 100%);
+    border-bottom:1px solid rgba(45,212,208,.4);
+    position:relative;
+  }
+  .ctable thead th.featured::after {
+    content:"POPULAR";
+    position:absolute; top:14px; right:14px;
+    background:var(--brand-gradient); color:#0B1A1A;
+    font-family:var(--font-body); font-size:10px; font-weight:700;
+    padding:3px 8px; border-radius:999px; letter-spacing:.12em;
+  }
+  .ctable tbody td {
+    padding:16px 24px; font-size:14px;
+    border-bottom:1px solid var(--line-soft);
+    color:var(--ink-9);
+  }
+  .ctable tbody td:first-child { color:#fff; font-weight:500; }
+  .ctable tbody td.dim { color:var(--ink-7); }
+  .ctable tbody tr:last-child td { border-bottom:none; }
+  .ctable .row-head td {
+    background:var(--ink-1); color:var(--brand-cyan);
+    font-size:11px; text-transform:uppercase; letter-spacing:.14em; font-weight:600;
+    padding:14px 24px;
+  }
+  .ctable td.center { text-align:center; }
+  .ctable td.center.featured { background:rgba(45,212,208,.04); }
+  .ctable td .ck { color:var(--brand-cyan); }
+  .ctable td .x { color:var(--ink-5); }
+
+  @media (max-width:900px){
+    .ctable { font-size:13px; }
+    .ctable thead th { padding:18px 14px 14px; font-size:22px; }
+    .ctable tbody td { padding:12px 14px; font-size:13px; }
+  }
+
+  /* ---------------- FAQ ---------------- */
+  .faq { padding:120px 0; border-top:1px solid var(--line-soft); }
+  .faq-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:80px; }
+  @media (max-width:900px){ .faq-grid { grid-template-columns:1fr; gap:40px; } }
+  .faq h2 { font-size:clamp(56px, 7vw, 96px); margin:0; }
+  .faq-list { display:flex; flex-direction:column; }
+  details {
+    border-bottom:1px solid var(--line-soft);
+    padding:24px 0;
+  }
+  details:first-child { border-top:1px solid var(--line-soft); }
+  details summary {
+    list-style:none; cursor:pointer;
+    display:flex; align-items:center; gap:16px;
+    font-family:var(--font-body); font-size:18px; font-weight:600; color:#fff;
+    transition:color .2s var(--ease-out);
+  }
+  details summary::-webkit-details-marker { display:none; }
+  details summary::after {
+    content:"+"; margin-left:auto;
+    font-family:var(--font-display); font-size:32px; color:var(--brand-cyan);
+    line-height:1; transition:transform .25s var(--ease-out);
+    font-weight:400;
+  }
+  details[open] summary { color:var(--brand-cyan); }
+  details[open] summary::after { transform:rotate(45deg); }
+  details p {
+    margin:14px 0 4px;
+    color:var(--ink-8); font-size:15px; line-height:1.6;
+    max-width:62ch;
+  }
+
+  /* ---------------- Logos strip ---------------- */
+  .logos-strip { padding:60px 0; border-top:1px solid var(--line-soft); }
+  .logos-strip .label {
+    text-align:center; color:var(--ink-7); font-size:11.5px;
+    text-transform:uppercase; letter-spacing:.18em; font-weight:600;
+    margin-bottom:24px;
+  }
+  .logos-row {
+    display:flex; flex-wrap:wrap; justify-content:center; gap:48px;
+    opacity:.7;
+  }
+  .logos-row span {
+    font-family:var(--font-display); font-size:28px; color:var(--ink-8);
+    letter-spacing:.04em;
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><img src="assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="customers.html">Customers</a>
+      <a class="active" href="pricing.html">Pricing</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="demo.html">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="pricing-hero">
+  <div class="glow-tl"></div>
+  <div class="container">
+    <div class="eyebrow with-rule reveal">Pricing</div>
+    <h1 class="h1 reveal" style="margin-top:18px">One subscription.<br><span class="gradient-text">Eight tools retired.</span></h1>
+    <p class="lead reveal">Pick a plan and import your stack in minutes. Every plan includes the full platform — CRM, funnels, email, booking, automations. We only meter the things that grow with your business.</p>
+
+    <div class="billing-toggle reveal" role="tablist" id="billingToggle">
+      <button data-period="monthly" type="button">Monthly</button>
+      <button data-period="yearly" class="active" type="button">Yearly <span class="save-tag">SAVE 20%</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PLANS ============== -->
+<section class="plans">
+  <div class="container">
+    <div class="plans-grid">
+
+      <!-- STARTER -->
+      <div class="plan reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-tag">Founders &amp; solo operators getting their first 100 customers.</div>
+        <div class="plan-price">
+          <span class="currency">$</span>
+          <span class="num" data-monthly="59" data-yearly="47">47</span>
+          <span class="per">/month</span>
+        </div>
+        <div class="plan-billed" data-monthly-html="Billed monthly" data-yearly-html="Billed yearly &middot; <strong>$564/yr</strong>">Billed yearly · <strong>$564/yr</strong></div>
+        <a class="btn btn-ghost" href="demo.html">Start free trial<span class="btn-arrow">→</span></a>
+        <div class="plan-includes">Includes</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>1 workspace · 2 seats</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>2,500 contacts <span class="meta">+ unlimited imports</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>10,000 emails / month</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>5 funnel templates · 1 active site</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Booking calendars · round-robin</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>AI Compose · 100 drafts / month</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Email &amp; chat support</li>
+        </ul>
+      </div>
+
+      <!-- GROWTH (FEATURED) -->
+      <div class="plan featured reveal">
+        <div class="ribbon">Most popular</div>
+        <div class="plan-name">Growth</div>
+        <div class="plan-tag">Sales teams running a real pipeline, ready to scale.</div>
+        <div class="plan-price">
+          <span class="currency">$</span>
+          <span class="num" data-monthly="149" data-yearly="119">119</span>
+          <span class="per">/month</span>
+        </div>
+        <div class="plan-billed has-strike" data-monthly-html="Billed monthly" data-yearly-html="Billed yearly &middot; <strong>$1,428/yr</strong>">Billed yearly · <strong>$1,428/yr</strong></div>
+        <a class="btn btn-primary" href="demo.html">Start free trial<span class="btn-arrow">→</span></a>
+        <div class="plan-includes">Everything in Starter, plus</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited workspaces · 10 seats</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>50,000 contacts</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>150,000 emails / month</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>140+ funnel templates · unlimited sites</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>AI lead scoring &amp; smart routing</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>AI Compose · 2,500 drafts / month</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>SMS &amp; WhatsApp · 2,000 / month</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Priority migration from HubSpot &amp; co.</li>
+        </ul>
+      </div>
+
+      <!-- SCALE -->
+      <div class="plan reveal">
+        <div class="plan-name">Scale</div>
+        <div class="plan-tag">Agencies &amp; multi-brand teams running the whole stack on Clientlink.</div>
+        <div class="plan-price">
+          <span class="currency">$</span>
+          <span class="num" data-monthly="399" data-yearly="319">319</span>
+          <span class="per">/month</span>
+        </div>
+        <div class="plan-billed has-strike" data-monthly-html="Billed monthly" data-yearly-html="Billed yearly &middot; <strong>$3,828/yr</strong>">Billed yearly · <strong>$3,828/yr</strong></div>
+        <a class="btn btn-ghost" href="demo.html">Talk to sales<span class="btn-arrow">→</span></a>
+        <div class="plan-includes">Everything in Growth, plus</div>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited seats &amp; sub-accounts</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>250,000 contacts <span class="meta">+ overage at cost</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Unlimited emails on dedicated IPs</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>White-label workspace &amp; domain</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>SAML SSO · audit log · role permissions</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Dedicated success manager</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>99.99% uptime SLA · 24/7 support</li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>SOC 2 Type II · GDPR · BAA available</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ============== Saver banner ============== -->
+    <div class="saver reveal">
+      <div>
+        <div class="eyebrow with-rule" style="margin-bottom:16px">The math</div>
+        <h3 class="h3">You're already paying for this — <span class="gradient-text">just in pieces</span>.</h3>
+        <p>Side-by-side, the average growth team pays $1,840 a month for an unhappy stack of HubSpot, Mailchimp, ClickFunnels, Calendly, Twilio Studio, Zapier, Typeform, and Birdeye. Growth on Clientlink runs $119.</p>
+      </div>
+      <div class="saver-cards">
+        <div class="saver-card">
+          <div class="ln">Avg. stack</div>
+          <div class="val" style="text-decoration:line-through; text-decoration-color:rgba(255,255,255,.25);">$1,840</div>
+          <div class="sub">per month, eight tools</div>
+        </div>
+        <div class="saver-card gradient">
+          <div class="ln">On Clientlink</div>
+          <div class="val">$119</div>
+          <div class="sub">per month, one platform</div>
+        </div>
+        <div class="saver-card" style="grid-column:1 / span 2;">
+          <div class="ln">You save</div>
+          <div class="val" style="font-size:48px; color:var(--brand-lime)">$20,652<span style="color:var(--ink-7); font-family:var(--font-body); font-size:14px; font-weight:600; margin-left:8px">/year, billed yearly</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== LOGOS ============== -->
+<section class="logos-strip">
+  <div class="container">
+    <div class="label">Practices &amp; firms running on Clientlink</div>
+    <div class="logos-row">
+      <span>MAXIM&nbsp;HAIR</span><span>MAXIM&nbsp;MEN'S</span><span>KELLY&nbsp;LAW</span><span>DR.&nbsp;SHINTRE</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============== COMPARE TABLE ============== -->
+<section class="compare">
+  <div class="container">
+    <div class="compare-head reveal">
+      <div class="eyebrow with-rule">Compare plans</div>
+      <h2 class="h2" style="margin-top:18px">Everything,<br>in one row.</h2>
+    </div>
+
+    <div class="reveal" style="overflow-x:auto;">
+    <table class="ctable">
+      <thead>
+        <tr>
+          <th style="width:36%">Plan</th>
+          <th>Starter <span class="price-mini">$47 / mo</span></th>
+          <th class="featured">Growth <span class="price-mini">$119 / mo</span></th>
+          <th>Scale <span class="price-mini">$319 / mo</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-head"><td colspan="4">Workspace</td></tr>
+        <tr><td>Seats</td><td class="center dim">2</td><td class="center featured">10</td><td class="center">Unlimited</td></tr>
+        <tr><td>Sub-accounts</td><td class="center"><span class="x">—</span></td><td class="center featured">3</td><td class="center">Unlimited</td></tr>
+        <tr><td>Contacts</td><td class="center">2,500</td><td class="center featured">50,000</td><td class="center">250,000</td></tr>
+
+        <tr class="row-head"><td colspan="4">CRM &amp; pipeline</td></tr>
+        <tr><td>Unified inbox · email, SMS, social</td><td class="center"><span class="ck">●</span></td><td class="center featured"><span class="ck">●</span></td><td class="center"><span class="ck">●</span></td></tr>
+        <tr><td>Custom pipelines &amp; stages</td><td class="center">Up to 3</td><td class="center featured">Unlimited</td><td class="center">Unlimited</td></tr>
+        <tr><td>Revenue forecasting</td><td class="center"><span class="x">—</span></td><td class="center featured"><span class="ck">●</span></td><td class="center"><span class="ck">●</span></td></tr>
+        <tr><td>Contact enrichment</td><td class="center"><span class="x">—</span></td><td class="center featured"><span class="ck">●</span></td><td class="center"><span class="ck">●</span></td></tr>
+
+        <tr class="row-head"><td colspan="4">Funnels &amp; sites</td></tr>
+        <tr><td>Funnel templates</td><td class="center">5</td><td class="center featured">140+</td><td class="center">140+</td></tr>
+        <tr><td>Published sites</td><td class="center">1</td><td class="center featured">Unlimited</td><td class="center">Unlimited</td></tr>
+        <tr><td>Native A/B testing</td><td class="center"><span class="x">—</span></td><td class="center featured"><span class="ck">●</span></td><td class="center"><span class="ck">●</span></td></tr>
+        <tr><td>Custom domains</td><td class="center">1</td><td class="center featured">10</td><td class="center">Unlimited</td></tr>
+
+        <tr class="row-head"><td colspan="4">Email &amp; SMS</td></tr>
+        <tr><td>Monthly email sends</td><td class="center">10,000</td><td class="center featured">150,000</td><td class="center">Unlimited</td></tr>
+        <tr><td>Dedicated sending IP</td><td class="center"><span class="x">—</span></td><td class="center featured"><span class="x">—</span></td><td class="center"><span class="ck">●</span></td></tr>
+        <tr><td>SMS / WhatsApp monthly</td><td class="center">200</td><td class="center featured">2,000</td><td class="center">10,000+</td></tr>
+
+        <tr class="row-head"><td colspan="4">AI &amp; automation</td></tr>
+        <tr><td>AI Compose drafts</td><td class="center">100/mo</td><td class="center featured">2,500/mo</td><td class="center">Unlimited</td></tr>
+        <tr><td>AI lead scoring</td><td class="center"><span class="x">—</span></td><td class="center featured"><span class="ck">●</span></td><td class="center"><span class="ck">●</span></td></tr>
+        <tr><td>Workflow automations</td><td class="center">10 active</td><td class="center featured">Unlimited</td><td class="center">Unlimited</td></tr>
+
+        <tr class="row-head"><td colspan="4">Security &amp; support</td></tr>
+        <tr><td>SSO / SAML</td><td class="center"><span class="x">—</span></td><td class="center featured"><span class="x">—</span></td><td class="center"><span class="ck">●</span></td></tr>
+        <tr><td>Audit log</td><td class="center"><span class="x">—</span></td><td class="center featured">90 days</td><td class="center">2 years</td></tr>
+        <tr><td>SOC 2 Type II</td><td class="center"><span class="ck">●</span></td><td class="center featured"><span class="ck">●</span></td><td class="center"><span class="ck">●</span></td></tr>
+        <tr><td>Support</td><td class="center dim">Email · chat</td><td class="center featured">Priority chat</td><td class="center">Dedicated CSM</td></tr>
+        <tr><td>Uptime SLA</td><td class="center dim">99.9%</td><td class="center featured">99.95%</td><td class="center">99.99%</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FAQ ============== -->
+<section class="faq">
+  <div class="container">
+    <div class="faq-grid">
+      <div class="reveal">
+        <div class="eyebrow with-rule" style="margin-bottom:18px">Common questions</div>
+        <h2>Asked<br>often.</h2>
+        <p class="lead" style="margin-top:24px">Still stuck on something? Talk to a real person on the demo call — they'll size you up and quote a number on the spot.</p>
+        <a class="btn btn-ghost" href="demo.html" style="margin-top:24px">Book a demo<span class="btn-arrow">→</span></a>
+      </div>
+      <div class="faq-list reveal">
+        <details open>
+          <summary>What happens at the end of my 14-day trial?</summary>
+          <p>Nothing — until you tell us. We don't ask for a card upfront and we don't auto-charge. On day 14 we send a single email summarizing what you built and offering a plan. Cancel anytime; your data exports to CSV in one click.</p>
+        </details>
+        <details>
+          <summary>Will you migrate my data from HubSpot, Mailchimp, or Calendly?</summary>
+          <p>Yes — on Growth and above we run a guided migration. We pull contacts, deals, automations, and campaigns and rebuild them inside Clientlink so your team comes back on Monday to a workspace that already works. Typical migration takes 3–5 business days.</p>
+        </details>
+        <details>
+          <summary>How are seats and contacts metered?</summary>
+          <p>A seat is anyone with login access to your workspace. A contact is a unique person with at least one identifier — an email or phone — that you've stored in CRM. Imports are unlimited; we only meter your active count.</p>
+        </details>
+        <details>
+          <summary>Can I run multiple brands or clients in one account?</summary>
+          <p>That's what sub-accounts are for. Growth includes 3 sub-accounts; Scale is unlimited. Each sub-account has its own CRM, sending domain, branding, and team — billed under a single parent invoice.</p>
+        </details>
+        <details>
+          <summary>Do you offer a non-profit, education, or startup discount?</summary>
+          <p>Yes. Registered non-profits and accredited education customers get 30% off any plan. Pre-seed startups (less than $1M raised) get Growth at $49 for 12 months — apply through the demo form and we'll set it up.</p>
+        </details>
+        <details>
+          <summary>What about HIPAA / SOC 2 / GDPR?</summary>
+          <p>SOC 2 Type II and GDPR are standard on every plan. HIPAA-eligible workloads run on Scale with a signed BAA — we restrict the PHI surface to the CRM and supported integrations. Security questionnaires available on request.</p>
+        </details>
+        <details>
+          <summary>What if my volume changes mid-month?</summary>
+          <p>You won't get hit with a surprise bill. We email you at 80% of any meter (sends, SMS, AI drafts), recommend a plan move, and only count overages from the moment you confirm. No throttling, no silent shutoffs.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FINAL CTA ============== -->
+<section class="final-cta">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner reveal">
+      <div class="eyebrow with-rule" style="justify-content:center; margin-bottom:24px">Try it on your pipeline</div>
+      <h2 class="h2">Build, send, close —<br><span class="gradient-text">in one afternoon.</span></h2>
+      <p class="lead">Start the 14-day trial, import your stack, and we'll send a migration specialist on day two to make sure nothing's broken.</p>
+      <div class="row">
+        <a class="btn btn-primary btn-lg" href="demo.html">Start free trial<span class="btn-arrow">→</span></a>
+        <a class="btn btn-ghost btn-lg" href="demo.html">Talk to sales</a>
+      </div>
+      <div class="reassure">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>No credit card</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Migration included on Growth+</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cancel anytime</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div><h5>Platform</h5><ul>
+        <li><a href="platform.html">Overview</a></li>
+        <li><a href="platform.html#crm">CRM</a></li>
+        <li><a href="platform.html#funnels">Funnels</a></li>
+        <li><a href="platform.html#email">Email &amp; SMS</a></li>
+        <li><a href="platform.html#booking">Booking</a></li>
+        <li><a href="platform.html#automations">Automations</a></li>
+      </ul></div>
+      <div><h5>Solutions</h5><ul>
+        <li><a href="#">Agencies</a></li><li><a href="#">Coaches</a></li>
+        <li><a href="#">Local services</a></li><li><a href="#">SaaS</a></li>
+      </ul></div>
+      <div><h5>Resources</h5><ul>
+        <li><a href="changelog.html">Changelog</a></li>
+        <li><a href="#">Templates</a></li>
+        <li><a href="#">Help center</a></li>
+        <li><a href="#">API docs</a></li>
+      </ul></div>
+      <div><h5>Company</h5><ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="customers.html">Customers</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="demo.html">Contact</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links">
+        <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
+        <a href="security.html">Security</a><a href="#">Status</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/scripts.js"></script>
+<script>
+  // Billing toggle — swap monthly/yearly prices
+  const toggle = document.getElementById('billingToggle');
+  toggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    toggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+    const period = btn.dataset.period;
+    document.querySelectorAll('.plan-price .num').forEach(n => {
+      n.textContent = n.dataset[period];
+    });
+    document.querySelectorAll('.plan-billed').forEach(el => {
+      el.innerHTML = el.dataset[period + 'Html'];
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Customers — Clientlink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .c-hero { padding:180px 0 80px; position:relative; overflow:hidden; }
+  .c-hero h1 { max-width:14ch; }
+
+  /* ============== Headline metrics ============== */
+  .head-metrics {
+    margin-top:72px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    border:1px solid var(--line-soft); border-radius:18px;
+    background:var(--ink-2); overflow:hidden;
+  }
+  .head-metrics .m { padding:32px; border-right:1px solid var(--line-soft); }
+  .head-metrics .m:last-child { border-right:none; }
+  .head-metrics .v {
+    font-family:var(--font-display); font-size:64px; line-height:1; color:#fff;
+  }
+  .head-metrics .v .pl {
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .head-metrics .l { font-size:13px; color:var(--ink-8); margin-top:14px; max-width:28ch; }
+  @media (max-width:900px){
+    .head-metrics { grid-template-columns:1fr 1fr; }
+    .head-metrics .m { border-right:none; border-bottom:1px solid var(--line-soft); }
+    .head-metrics .m:nth-child(2n) { border-right:none; }
+  }
+
+  /* ============== Featured case study ============== */
+  .featured-case {
+    padding:140px 0; border-top:1px solid var(--line-soft);
+  }
+  .featured-inner {
+    display:grid; grid-template-columns:1.2fr 1fr; gap:80px; align-items:center;
+  }
+  @media (max-width:1000px){ .featured-inner { grid-template-columns:1fr; gap:40px; } }
+  .featured-eyebrow { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+  .featured-eyebrow .logo {
+    font-family:var(--font-display); font-size:24px; color:#fff;
+    letter-spacing:.04em; padding:6px 14px;
+    border:1px solid var(--line-strong); border-radius:8px;
+    background:var(--ink-2);
+  }
+  .featured-eyebrow .industry {
+    font-size:11.5px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.16em; font-weight:600;
+  }
+  .featured-quote {
+    font-family:var(--font-body);
+    font-size:clamp(24px, 2.4vw, 34px);
+    line-height:1.32; color:#fff; font-weight:400;
+    margin:0 0 32px;
+  }
+  .featured-quote::before {
+    content:"\201C"; font-family:var(--font-display);
+    color:var(--brand-cyan); margin-right:6px;
+  }
+  .featured-quote .hl {
+    background:linear-gradient(120deg, transparent 0%, rgba(45,212,208,.18) 50%, transparent 100%);
+    padding:0 4px;
+  }
+  .featured-by {
+    display:flex; align-items:center; gap:14px;
+    padding-top:24px; border-top:1px solid var(--line-soft);
+    margin-bottom:36px;
+  }
+  .featured-by .ava {
+    width:48px; height:48px; border-radius:50%;
+    background:var(--brand-gradient); color:#0B1A1A;
+    display:grid; place-items:center; font-weight:700; font-size:16px;
+    flex-shrink:0;
+  }
+  .featured-by .n { color:#fff; font-weight:600; font-size:15px; }
+  .featured-by .r { color:var(--ink-7); font-size:13px; margin-top:2px; }
+  .featured-by .btn { margin-left:auto; }
+
+  .featured-metrics {
+    display:grid; grid-template-columns:1fr 1fr; gap:14px;
+    margin-top:32px;
+  }
+  .featured-metrics .fm {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:14px; padding:24px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+  }
+  .featured-metrics .fm .v {
+    font-family:var(--font-display); font-size:56px; line-height:1;
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .featured-metrics .fm .l { font-size:12.5px; color:var(--ink-8); margin-top:10px; max-width:18ch; }
+
+  /* Sub-metrics card panel as visual */
+  .featured-visual {
+    position:relative;
+  }
+  .featured-visual::before {
+    content:""; position:absolute; inset:-40px;
+    background:radial-gradient(circle, rgba(45,212,208,.10) 0%, transparent 60%);
+    z-index:0; pointer-events:none;
+  }
+  .featured-visual-inner {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:20px; padding:32px;
+    box-shadow:var(--shadow-lg), var(--shadow-inset);
+    position:relative; z-index:1;
+  }
+  .stack-comparison h4 {
+    font-family:var(--font-display); font-size:24px; color:#fff;
+    text-transform:uppercase; margin:0 0 18px;
+  }
+  .stack-before, .stack-after {
+    display:flex; flex-wrap:wrap; gap:6px;
+    padding:14px 0; border-bottom:1px solid var(--line-soft);
+  }
+  .stack-after { border-bottom:none; }
+  .stack-comparison .lbl {
+    font-size:11px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.14em; font-weight:700;
+    margin-bottom:8px;
+  }
+  .stack-chip {
+    padding:5px 11px; border-radius:999px;
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    font-size:12px; color:var(--ink-8);
+  }
+  .stack-chip.strike { text-decoration:line-through; text-decoration-color:rgba(255,255,255,.25); }
+  .stack-chip.cl {
+    background:var(--brand-gradient); color:#0B1A1A; font-weight:700; border-color:transparent;
+    box-shadow:0 0 20px rgba(45,212,208,.3);
+  }
+  .stack-arrow {
+    text-align:center; padding:14px 0; color:var(--brand-cyan);
+    font-family:var(--font-display); font-size:18px; letter-spacing:.14em;
+  }
+  .stack-comparison .save {
+    margin-top:20px; padding:14px 18px;
+    background:linear-gradient(135deg, rgba(168,224,99,.10), rgba(45,212,208,.04));
+    border:1px solid rgba(168,224,99,.25);
+    border-radius:12px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .stack-comparison .save .v {
+    font-family:var(--font-display); font-size:36px; line-height:1; color:var(--brand-lime);
+    white-space:nowrap;
+  }
+  .stack-comparison .save .l { font-size:12px; color:var(--ink-8); }
+
+  /* ============== Case studies grid ============== */
+  .cases { padding:140px 0; border-top:1px solid var(--line-soft); }
+  .cases-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  @media (max-width:1000px){ .cases-grid { grid-template-columns:1fr 1fr; } }
+  @media (max-width:640px){ .cases-grid { grid-template-columns:1fr; } }
+
+  .case {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:18px; padding:32px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    transition:all .25s var(--ease-out), opacity .3s var(--ease-out), transform .3s var(--ease-out);
+    display:flex; flex-direction:column;
+    position:relative; overflow:hidden;
+    cursor:pointer;
+  }
+  .case:hover {
+    transform:translateY(-4px);
+    box-shadow:var(--shadow-pop), var(--shadow-inset);
+  }
+  .case.hidden {
+    opacity:0; transform:scale(.96);
+    pointer-events:none; position:absolute;
+    /* keeps grid from collapsing mid-animation */
+  }
+  .case .logo {
+    font-family:var(--font-display); font-size:22px; letter-spacing:.04em;
+    color:#fff; margin-bottom:24px;
+  }
+  .case .industry {
+    font-size:11px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.14em; font-weight:600;
+    margin-bottom:14px;
+  }
+  .case .headline {
+    font-family:var(--font-display); font-size:32px; line-height:1; color:#fff;
+    text-transform:uppercase; margin-bottom:12px;
+  }
+  .case .headline .hl {
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .case .quote {
+    font-size:14px; color:var(--ink-8); line-height:1.55;
+    margin-bottom:24px; flex:1;
+  }
+  .case .results { display:flex; gap:24px; margin-bottom:24px; padding:18px 0; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft); }
+  .case .results .r { flex:1; }
+  .case .results .v { font-family:var(--font-display); font-size:32px; line-height:1; color:var(--brand-cyan); }
+  .case .results .l { font-size:11px; color:var(--ink-7); margin-top:6px; text-transform:uppercase; letter-spacing:.1em; font-weight:600; }
+  .case .by { display:flex; align-items:center; gap:12px; }
+  .case .by .ava { width:32px; height:32px; border-radius:50%; background:var(--brand-gradient); display:grid; place-items:center; color:#0B1A1A; font-weight:700; font-size:13px; flex-shrink:0; }
+  .case .by .n { font-size:13px; font-weight:600; color:#fff; }
+  .case .by .role { font-size:11.5px; color:var(--ink-7); }
+  .case .read {
+    margin-top:auto; padding-top:18px;
+    font-size:12px; color:var(--brand-cyan); font-weight:600;
+    text-transform:uppercase; letter-spacing:.14em;
+    display:flex; align-items:center; gap:8px;
+  }
+  .case:hover .read { gap:14px; }
+  .case .read .arrow { transition:transform .2s var(--ease-out); }
+  .case:hover .read .arrow { transform:translateX(4px); }
+
+  /* Empty state when no cards match filter */
+  .cases-empty {
+    grid-column:1/-1;
+    text-align:center; padding:80px 0;
+    color:var(--ink-7); font-size:15px;
+    display:none;
+  }
+  .cases-empty.visible { display:block; }
+
+  /* ============== Logos & filters ============== */
+  .filter-bar {
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-bottom:48px;
+  }
+  .filter-bar button {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    color:var(--ink-9); padding:8px 16px;
+    border-radius:999px; font-size:13px; font-weight:500; cursor:pointer;
+    font-family:var(--font-body);
+    transition:all .15s var(--ease-out);
+  }
+  .filter-bar button:hover { border-color:var(--line-strong); background:var(--ink-3); }
+  .filter-bar button.active {
+    background:var(--brand-gradient); color:#0B1A1A; border-color:transparent;
+    font-weight:700;
+    box-shadow:0 0 24px rgba(45,212,208,.25);
+  }
+
+  /* ============== Trust band ============== */
+  .trust-band {
+    padding:100px 0; border-top:1px solid var(--line-soft);
+  }
+  .trust-band h2 {
+    text-align:center; margin:0 0 64px;
+    font-size:clamp(48px,5vw,72px);
+  }
+  .trust-grid {
+    display:grid; grid-template-columns:repeat(4,1fr);
+    gap:24px;
+    align-items:center;
+  }
+  .trust-grid .l {
+    font-family:var(--font-display);
+    font-size:22px; letter-spacing:.04em;
+    color:var(--ink-8);
+    text-align:center;
+    padding:24px 0;
+    border:1px solid var(--line-soft);
+    border-radius:12px;
+    background:var(--ink-2);
+    transition:all .2s var(--ease-out);
+  }
+  .trust-grid .l:hover {
+    color:#fff;
+    border-color:var(--line-strong);
+    background:var(--ink-3);
+  }
+  @media (max-width:900px){ .trust-grid { grid-template-columns:repeat(2,1fr); } }
+
+  /* ============== Quote wall ============== */
+  .quote-wall {
+    padding:140px 0; border-top:1px solid var(--line-soft);
+  }
+  .qw-grid {
+    columns:3;
+    column-gap:24px;
+  }
+  @media (max-width:900px){ .qw-grid { columns:2; } }
+  @media (max-width:600px){ .qw-grid { columns:1; } }
+  .qw-card {
+    break-inside:avoid;
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:14px; padding:24px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    transition:all .25s var(--ease-out);
+    display:inline-block; width:100%;
+  }
+  .qw-card:hover {
+    transform:translateY(-2px);
+    background:var(--ink-3);
+    box-shadow:var(--shadow-pop), var(--shadow-inset);
+  }
+  .qw-card .stars { color:var(--brand-lime); margin-bottom:12px; font-size:13px; letter-spacing:.04em; }
+  .qw-card .q { font-size:14.5px; line-height:1.55; color:var(--ink-9); margin-bottom:18px; }
+  .qw-card .q .hl { color:#fff; font-weight:600; }
+  .qw-card .who { display:flex; align-items:center; gap:10px; padding-top:14px; border-top:1px solid var(--line-soft); }
+  .qw-card .who .ava { width:28px; height:28px; border-radius:50%; background:var(--brand-gradient); display:grid; place-items:center; color:#0B1A1A; font-size:11px; font-weight:700; flex-shrink:0; }
+  .qw-card .who .n { font-size:12.5px; color:#fff; font-weight:600; }
+  .qw-card .who .r { font-size:11px; color:var(--ink-7); }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><img src="assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a class="active" href="customers.html">Customers</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="demo.html">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="c-hero">
+  <div class="glow-tl"></div>
+  <div class="container">
+    <div class="eyebrow with-rule reveal">Customers</div>
+    <h1 class="h1 reveal" style="margin-top:18px">Real practices.<br><span class="gradient-text">One workspace.</span></h1>
+    <p class="lead reveal">From hair restoration to personal injury law to private practice — here's what real Clientlink customers are doing with the platform, in their own voice.</p>
+
+    <div class="head-metrics reveal">
+      <div class="m"><div class="v">5</div><div class="l">Featured customer practices across medical, legal &amp; aesthetics</div></div>
+      <div class="m"><div class="v">24/7</div><div class="l">Inquiry-to-reply, automated</div></div>
+      <div class="m"><div class="v">1</div><div class="l">Workspace replaces the patchwork stack</div></div>
+      <div class="m"><div class="v">5<span class="pl">★</span></div><div class="l">Average customer rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FEATURED CASE STUDY ============== -->
+<section class="featured-case">
+  <div class="container">
+    <div class="featured-inner">
+      <div class="reveal">
+        <div class="featured-eyebrow">
+          <span class="logo">MAXIM&nbsp;HAIR</span>
+          <span class="industry">Medical aesthetics · Multi-location · Hair restoration</span>
+        </div>
+        <p class="featured-quote">
+          Maxim Hair Restoration was juggling four separate tools just to get a consult on the calendar — inquiries from the site, follow-ups by email, reminders by SMS, and reviews by hand. <span class="hl">On Clientlink, every inquiry gets a reply within minutes, day or night</span>, every consult shows up with a complete file, and every patient hears from us again at exactly the right moment.
+        </p>
+        <div class="featured-by">
+          <div class="ava">MF</div>
+          <div>
+            <div class="n">Mac Fadra</div>
+            <div class="r">Owner · Maxim Hair Restoration</div>
+          </div>
+          <a class="btn btn-ghost" href="#story-maxim">Read the story<span class="btn-arrow">→</span></a>
+        </div>
+        <div class="featured-metrics">
+          <div class="fm"><div class="v">24/7</div><div class="l">Inquiry response, automated</div></div>
+          <div class="fm"><div class="v">↓4</div><div class="l">Tools retired week one</div></div>
+          <div class="fm"><div class="v">↑1</div><div class="l">Source of truth across locations</div></div>
+          <div class="fm"><div class="v">⇒</div><div class="l">Front desk freed up for patients</div></div>
+        </div>
+      </div>
+      <div class="featured-visual reveal">
+        <div class="featured-visual-inner">
+          <div class="stack-comparison">
+            <h4>The Maxim stack</h4>
+            <div class="lbl">Before · 4 tools · stitched together</div>
+            <div class="stack-before">
+              <span class="stack-chip strike">Web form vendor</span>
+              <span class="stack-chip strike">Email marketing tool</span>
+              <span class="stack-chip strike">SMS reminder app</span>
+              <span class="stack-chip strike">Review platform</span>
+            </div>
+            <div class="stack-arrow">↓ consolidated ↓</div>
+            <div class="lbl">After · 1 platform</div>
+            <div class="stack-after">
+              <span class="stack-chip cl">Clientlink</span>
+            </div>
+            <div class="save">
+              <div class="v">1 inbox</div>
+              <div class="l">Every inquiry, follow-up, booking, and review<br>handled by one team in one workspace.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CASE STUDIES GRID ============== -->
+<section class="cases" id="story-maxim">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow with-rule">All stories</div>
+      <h2 class="h2" style="margin-top:18px">How they're<br>growing.</h2>
+    </div>
+
+    <div class="filter-bar reveal" id="filter-bar">
+      <button class="active" data-filter="all">All</button>
+      <button data-filter="medical">Medical &amp; aesthetics</button>
+      <button data-filter="mens-health">Men's health</button>
+      <button data-filter="legal">Legal</button>
+      <button data-filter="private-practice">Private practice</button>
+    </div>
+
+    <div class="cases-grid" id="cases-grid">
+
+      <div class="case reveal" data-categories="medical">
+        <div class="logo">MAXIM&nbsp;HAIR</div>
+        <div class="industry">Medical aesthetics · Hair restoration</div>
+        <div class="headline">Every inquiry <span class="hl">answered</span>, day or night.</div>
+        <p class="quote">"Patients were finding us on weekends and we'd lose them by Monday. With Clientlink, the moment someone submits a form they get a thoughtful reply, a booking link, and the right person follows up the next morning."</p>
+        <div class="results">
+          <div class="r"><div class="v">24/7</div><div class="l">First reply</div></div>
+          <div class="r"><div class="v">1</div><div class="l">Source of truth</div></div>
+        </div>
+        <div class="by">
+          <div class="ava">MF</div>
+          <div><div class="n">Mac Fadra</div><div class="role">Owner</div></div>
+        </div>
+        <div class="read">Read story <span class="arrow">→</span></div>
+      </div>
+
+      <div class="case reveal" data-categories="medical">
+        <div class="logo">MAXIM&nbsp;HAIR</div>
+        <div class="industry">Medical aesthetics · Multi-location</div>
+        <div class="headline">Follow-ups that <span class="hl">actually happen</span>.</div>
+        <p class="quote">"The automations brought our patient-care sequences to life. Reminders, post-op check-ins, recall — every patient hears from us at exactly the right moment and the team finally has one source of truth."</p>
+        <div class="results">
+          <div class="r"><div class="v">100%</div><div class="l">Follow-up coverage</div></div>
+          <div class="r"><div class="v">↑</div><div class="l">Patient retention</div></div>
+        </div>
+        <div class="by">
+          <div class="ava" style="background:linear-gradient(135deg,#2FB6E8,#6FE0A8)">PS</div>
+          <div><div class="n">Philip Stoelman</div><div class="role">Owner</div></div>
+        </div>
+        <div class="read">Read story <span class="arrow">→</span></div>
+      </div>
+
+      <div class="case reveal" data-categories="mens-health">
+        <div class="logo">MAXIM&nbsp;MEN'S</div>
+        <div class="industry">Men's health · Clinic operations</div>
+        <div class="headline">No-shows <span class="hl">dropped fast</span>.</div>
+        <p class="quote">"Booking, intake forms, reminders, and rescheduling all live in one workflow now. Our no-show rate dropped fast and patients tell us the experience feels effortless from the first click."</p>
+        <div class="results">
+          <div class="r"><div class="v">↓</div><div class="l">No-show rate</div></div>
+          <div class="r"><div class="v">1</div><div class="l">Workflow, end to end</div></div>
+        </div>
+        <div class="by">
+          <div class="ava" style="background:linear-gradient(135deg,#6FE0A8,#A8E063)">AN</div>
+          <div><div class="n">Angel Negron</div><div class="role">Patient Success Coordinator</div></div>
+        </div>
+        <div class="read">Read story <span class="arrow">→</span></div>
+      </div>
+
+      <div class="case reveal" data-categories="legal">
+        <div class="logo">KELLY&nbsp;LAW</div>
+        <div class="industry">Personal injury law · Phoenix, AZ</div>
+        <div class="headline">First to <span class="hl">the call</span>, first to sign.</div>
+        <p class="quote">"In personal injury, response time is everything. Clientlink routes every new case to the right person in seconds — we sign more clients because we get to them first, and the intake paperwork is already in flight."</p>
+        <div class="results">
+          <div class="r"><div class="v">↑</div><div class="l">Signed cases</div></div>
+          <div class="r"><div class="v">↓</div><div class="l">Time to first contact</div></div>
+        </div>
+        <div class="by">
+          <div class="ava" style="background:linear-gradient(135deg,#A8E063,#2DD4D0)">JK</div>
+          <div><div class="n">John Kelly</div><div class="role">Owner · Kelly Law Team</div></div>
+        </div>
+        <div class="read">Read story <span class="arrow">→</span></div>
+      </div>
+
+      <div class="case reveal" data-categories="private-practice">
+        <div class="logo">DR.&nbsp;SHINTRE</div>
+        <div class="industry">Private practice · Recall &amp; retention</div>
+        <div class="headline">Chairs <span class="hl">stay full</span>, automatically.</div>
+        <p class="quote">"My front desk used to chase patients by phone all day. Now Clientlink handles recall, rebooking, and review requests automatically — our chairs stay full and the team can actually focus on patient care."</p>
+        <div class="results">
+          <div class="r"><div class="v">↑</div><div class="l">Recall &amp; rebooking</div></div>
+          <div class="r"><div class="v">↑</div><div class="l">Reviews collected</div></div>
+        </div>
+        <div class="by">
+          <div class="ava" style="background:linear-gradient(135deg,#E58FB5,#2FB6E8)">NS</div>
+          <div><div class="n">Dr. Niranjan Shintre</div><div class="role">Owner</div></div>
+        </div>
+        <div class="read">Read story <span class="arrow">→</span></div>
+      </div>
+
+      <div class="cases-empty" id="cases-empty">
+        <p style="color:var(--ink-7); font-size:15px;">No stories in this category yet — check back soon.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============== TRUST BAND ============== -->
+<section class="trust-band">
+  <div class="container">
+    <h2 class="h2 reveal" style="text-align:center">Trusted by teams growing fast.</h2>
+    <div class="trust-grid reveal">
+      <div class="l">MAXIM&nbsp;HAIR</div>
+      <div class="l">MAXIM&nbsp;MEN'S</div>
+      <div class="l">KELLY&nbsp;LAW</div>
+      <div class="l">DR.&nbsp;SHINTRE</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== QUOTE WALL ============== -->
+<section class="quote-wall">
+  <div class="container">
+    <div class="section-head reveal" style="text-align:center; margin:0 auto 64px;">
+      <div class="eyebrow with-rule" style="justify-content:center;">Customer voices</div>
+      <h2 class="h2" style="margin-top:18px">In their own words.</h2>
+    </div>
+
+    <div class="qw-grid">
+      <div class="qw-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="q">"<span class="hl">Every inquiry gets a reply within minutes</span>, even at midnight — and the front desk wakes up to a clean calendar."</p>
+        <div class="who"><div class="ava">MF</div><div><div class="n">Mac Fadra</div><div class="r">Owner · Maxim Hair Restoration</div></div></div>
+      </div>
+      <div class="qw-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="q">"The automations brought our patient-care sequences to life. <span class="hl">Patients hear from us at exactly the right moments</span> and the team has one source of truth."</p>
+        <div class="who"><div class="ava" style="background:linear-gradient(135deg,#2FB6E8,#6FE0A8)">PS</div><div><div class="n">Philip Stoelman</div><div class="r">Owner · Maxim Hair Restoration</div></div></div>
+      </div>
+      <div class="qw-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="q">"Booking, reminders, and intake all live in one workflow. <span class="hl">Our no-show rate dropped fast</span> and the patient experience feels effortless."</p>
+        <div class="who"><div class="ava" style="background:linear-gradient(135deg,#6FE0A8,#A8E063)">AN</div><div><div class="n">Angel Negron</div><div class="r">Patient Success Coordinator · Maxim Men's Health</div></div></div>
+      </div>
+      <div class="qw-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="q">"In personal injury, response time is everything. <span class="hl">We sign more clients because we get to them first.</span>"</p>
+        <div class="who"><div class="ava" style="background:linear-gradient(135deg,#A8E063,#2DD4D0)">JK</div><div><div class="n">John Kelly</div><div class="r">Owner · Kelly Law Team · Phoenix</div></div></div>
+      </div>
+      <div class="qw-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="q">"Recall, rebooking, and reviews are handled automatically now. <span class="hl">Our chairs stay full and the team can focus on care.</span>"</p>
+        <div class="who"><div class="ava" style="background:linear-gradient(135deg,#E58FB5,#2FB6E8)">NS</div><div><div class="n">Dr. Niranjan Shintre</div><div class="r">Owner · Dr. Shintre Practice</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FINAL CTA ============== -->
+<section class="final-cta">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner reveal">
+      <div class="eyebrow with-rule" style="justify-content:center; margin-bottom:24px">Be next</div>
+      <h2 class="h2">Add your team<br><span class="gradient-text">to the list.</span></h2>
+      <p class="lead">A 20-minute demo, your data on the screen, your migration plan in your inbox by end of day.</p>
+      <div class="row">
+        <a class="btn btn-primary btn-lg" href="demo.html">Book a demo<span class="btn-arrow">→</span></a>
+        <a class="btn btn-ghost btn-lg" href="pricing.html">See pricing</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div><h5>Platform</h5><ul><li><a href="platform.html">Overview</a></li><li><a href="platform.html#crm">CRM</a></li><li><a href="platform.html#funnels">Funnels</a></li><li><a href="platform.html#email">Email &amp; SMS</a></li><li><a href="platform.html#booking">Booking</a></li><li><a href="platform.html#automations">Automations</a></li></ul></div>
+      <div><h5>Solutions</h5><ul><li><a href="#">Agencies</a></li><li><a href="#">Coaches</a></li><li><a href="#">Local services</a></li><li><a href="#">SaaS</a></li></ul></div>
+      <div><h5>Resources</h5><ul><li><a href="changelog.html">Changelog</a></li><li><a href="#">Templates</a></li><li><a href="#">Help center</a></li><li><a href="#">API docs</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="about.html">About</a></li><li><a href="customers.html">Customers</a></li><li><a href="#">Careers</a></li><li><a href="demo.html">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="#">Status</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/scripts.js"></script>
+<script>
+(function () {
+  const bar = document.getElementById('filter-bar');
+  const grid = document.getElementById('cases-grid');
+  const empty = document.getElementById('cases-empty');
+  if (!bar || !grid) return;
+
+  const cards = Array.from(grid.querySelectorAll('.case[data-categories]'));
+
+  bar.addEventListener('click', function (e) {
+    const btn = e.target.closest('button[data-filter]');
+    if (!btn) return;
+
+    // Update active state
+    bar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const filter = btn.dataset.filter;
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const categories = card.dataset.categories.split(' ');
+      const match = filter === 'all' || categories.includes(filter);
+
+      if (match) {
+        card.style.display = '';
+        // Re-trigger reveal animation so cards fade in
+        card.classList.remove('in');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => card.classList.add('in'));
+        });
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    empty.classList.toggle('visible', visibleCount === 0);
+  });
+})();
+</script>
+</body>
+</html>

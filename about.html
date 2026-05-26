@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About — Clientlink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .a-hero { padding:200px 0 100px; position:relative; overflow:hidden; }
+  .a-hero h1 { max-width:16ch; }
+  .a-hero .lead { margin-top:32px; font-size:22px; max-width:54ch; }
+
+  /* ============= Mission ============= */
+  .mission {
+    padding:120px 0; border-top:1px solid var(--line-soft);
+  }
+  .mission-grid {
+    display:grid; grid-template-columns:1.2fr 1fr; gap:80px; align-items:flex-start;
+  }
+  @media (max-width:1000px){ .mission-grid { grid-template-columns:1fr; gap:40px; } }
+  .mission h2 { margin:0 0 32px; }
+  .mission p {
+    color:var(--ink-9); font-size:17px; line-height:1.65;
+    margin:0 0 22px; max-width:58ch;
+  }
+  .mission p:last-child { color:var(--ink-8); }
+  .mission p .hl {
+    background:linear-gradient(120deg, transparent 0%, rgba(45,212,208,.18) 50%, transparent 100%);
+    color:#fff; padding:0 4px;
+  }
+  .mission-side {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:18px; padding:32px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+  }
+  .mission-side h4 {
+    font-family:var(--font-display); font-size:24px;
+    text-transform:uppercase; color:#fff; margin:0 0 18px;
+  }
+  .mission-side ul { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:14px; }
+  .mission-side ul li {
+    display:flex; align-items:flex-start; gap:12px;
+    font-size:14.5px; color:var(--ink-9);
+  }
+  .mission-side ul li svg { color:var(--brand-cyan); flex:none; margin-top:3px; }
+
+  /* ============= Timeline ============= */
+  .timeline { padding:140px 0; border-top:1px solid var(--line-soft); position:relative; overflow:hidden; }
+  .timeline .glow-c { opacity:.4; }
+  .timeline .container { position:relative; z-index:2; }
+  .tl-head { text-align:center; max-width:760px; margin:0 auto 96px; }
+  .tl-head h2 { margin:0; }
+
+  .tl-track {
+    position:relative;
+    padding:0 0 0 0;
+  }
+  .tl-track::before {
+    content:""; position:absolute;
+    left:50%; top:0; bottom:0; width:1px;
+    background:linear-gradient(180deg, transparent 0%, var(--line-strong) 8%, var(--line-strong) 92%, transparent 100%);
+  }
+  .tl-item {
+    display:grid; grid-template-columns:1fr 80px 1fr;
+    align-items:center;
+    margin-bottom:48px;
+  }
+  .tl-item:last-child { margin-bottom:0; }
+  .tl-dot {
+    width:14px; height:14px; border-radius:50%;
+    background:var(--brand-gradient);
+    border:3px solid var(--ink-1);
+    box-shadow:0 0 24px rgba(45,212,208,.5);
+    justify-self:center;
+    position:relative;
+  }
+  .tl-year {
+    font-family:var(--font-display);
+    font-size:64px; line-height:1; color:#fff;
+    margin-bottom:12px;
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .tl-card .title {
+    font-family:var(--font-display); font-size:28px;
+    text-transform:uppercase; color:#fff; margin-bottom:10px;
+  }
+  .tl-card p { color:var(--ink-8); font-size:14.5px; margin:0; max-width:42ch; line-height:1.55; }
+  .tl-item.left .tl-card { text-align:right; padding-right:48px; }
+  .tl-item.left .tl-card p { margin-left:auto; }
+  .tl-item.right .tl-card { padding-left:48px; }
+  .tl-item.left > div:nth-child(3) { visibility:hidden; }
+  .tl-item.right > div:nth-child(1) { visibility:hidden; }
+  @media (max-width:800px){
+    .tl-track::before { left:14px; }
+    .tl-item { grid-template-columns:30px 1fr; }
+    .tl-item.left .tl-card, .tl-item.right .tl-card { text-align:left; padding:0 0 0 20px; }
+    .tl-item.left > div:nth-child(3), .tl-item.right > div:nth-child(1) { display:none; }
+    .tl-item.left { grid-template-areas:"dot card"; }
+    .tl-item.right { grid-template-areas:"dot card"; }
+    .tl-item .tl-dot { grid-area:dot; }
+    .tl-item .tl-card { grid-area:card; }
+    .tl-year { font-size:42px; }
+  }
+
+  /* ============= Stats band ============= */
+  .stats-band {
+    padding:80px 0; border-top:1px solid var(--line-soft);
+  }
+  .stats-band .grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  }
+  .stats-band .s {
+    padding:0 32px; border-left:1px solid var(--line-soft);
+  }
+  .stats-band .s:first-child { border-left:none; padding-left:0; }
+  .stats-band .v {
+    font-family:var(--font-display);
+    font-size:clamp(56px, 7vw, 96px); line-height:.95; color:#fff;
+  }
+  .stats-band .v .pl { color:var(--brand-cyan); }
+  .stats-band .l {
+    font-size:13px; color:var(--ink-8); margin-top:12px;
+    max-width:24ch; line-height:1.4;
+  }
+  @media (max-width:880px){
+    .stats-band .grid { grid-template-columns:repeat(2,1fr); gap:32px 0; }
+    .stats-band .s { padding:0 16px; }
+    .stats-band .s:nth-child(odd){ border-left:none; padding-left:0; }
+  }
+
+  /* ============= Values ============= */
+  .values { padding:140px 0; border-top:1px solid var(--line-soft); }
+  .values-head { max-width:880px; margin-bottom:80px; }
+  .values-grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
+    background:var(--line-soft);
+    border:1px solid var(--line-soft);
+    border-radius:18px; overflow:hidden;
+  }
+  .value {
+    background:var(--ink-1);
+    padding:48px 40px;
+    display:flex; flex-direction:column;
+    transition:background .25s var(--ease-out);
+  }
+  .value:hover { background:var(--ink-2); }
+  .value .num {
+    font-family:var(--font-display);
+    font-size:18px;
+    color:var(--brand-cyan);
+    letter-spacing:.14em;
+    margin-bottom:20px;
+  }
+  .value h4 {
+    font-family:var(--font-display); font-size:40px;
+    text-transform:uppercase; color:#fff;
+    line-height:1; margin:0 0 18px;
+  }
+  .value h4 .hl {
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .value p { color:var(--ink-8); font-size:15px; line-height:1.6; margin:0; max-width:48ch; }
+  @media (max-width:900px){ .values-grid { grid-template-columns:1fr; } }
+
+  /* ============= Team ============= */
+  .team { padding:140px 0; border-top:1px solid var(--line-soft); }
+  .team-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+  }
+  @media (max-width:900px){ .team-grid { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:540px){ .team-grid { grid-template-columns:1fr; } }
+  .person {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:18px; padding:24px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    transition:all .25s var(--ease-out);
+  }
+  .person:hover {
+    transform:translateY(-3px); background:var(--ink-3);
+    box-shadow:var(--shadow-pop), var(--shadow-inset);
+  }
+  .person .face {
+    width:100%; aspect-ratio:1;
+    border-radius:14px;
+    background:var(--ink-1);
+    margin-bottom:18px;
+    position:relative;
+    overflow:hidden;
+    display:grid; place-items:center;
+  }
+  .person .face .initials {
+    font-family:var(--font-display); font-size:88px;
+    line-height:1; color:transparent;
+    -webkit-text-stroke:1.5px rgba(255,255,255,.3);
+    transition:all .3s var(--ease-out);
+  }
+  .person:hover .face .initials {
+    -webkit-text-stroke:0;
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .person .name {
+    font-family:var(--font-display); font-size:22px;
+    text-transform:uppercase; color:#fff; line-height:1;
+  }
+  .person .role { font-size:13px; color:var(--ink-7); margin-top:8px; }
+  .person .prev { font-size:11.5px; color:var(--ink-7); margin-top:14px; padding-top:14px; border-top:1px solid var(--line-soft); }
+  .person .prev .lbl { color:var(--brand-cyan); font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+
+  /* ============= Investors ============= */
+  .investors {
+    padding:100px 0; border-top:1px solid var(--line-soft);
+  }
+  .investors h3 {
+    font-family:var(--font-display); font-size:32px; text-transform:uppercase;
+    text-align:center; color:#fff; margin:0 0 48px;
+  }
+  .investors-row {
+    display:flex; flex-wrap:wrap; justify-content:center; gap:64px;
+  }
+  .investors-row .l {
+    font-family:var(--font-display); font-size:28px; color:var(--ink-8);
+    letter-spacing:.04em;
+  }
+
+  /* ============= Offices ============= */
+  .offices { padding:140px 0; border-top:1px solid var(--line-soft); }
+  .offices-grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  }
+  @media (max-width:900px){ .offices-grid { grid-template-columns:1fr; } }
+  .office {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:18px; padding:32px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    position:relative; overflow:hidden;
+  }
+  .office::before {
+    content:""; position:absolute; right:-60px; top:-60px;
+    width:180px; height:180px;
+    background:radial-gradient(circle, rgba(45,212,208,.08) 0%, transparent 60%);
+  }
+  .office .city {
+    font-family:var(--font-display); font-size:48px;
+    text-transform:uppercase; color:#fff; line-height:1; margin-bottom:14px;
+  }
+  .office .addr { color:var(--ink-8); font-size:14px; line-height:1.5; margin-bottom:18px; }
+  .office .team { font-size:11.5px; color:var(--brand-cyan); text-transform:uppercase; letter-spacing:.14em; font-weight:700; }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><img src="assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="customers.html">Customers</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="changelog.html">Changelog</a>
+      <a class="active" href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="demo.html">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ============= HERO ============= -->
+<section class="a-hero">
+  <div class="glow-tl"></div>
+  <div class="container">
+    <div class="eyebrow with-rule reveal">About Clientlink</div>
+    <h1 class="h1 reveal" style="margin-top:18px">We're killing<br>the <span class="gradient-text">growth stack.</span></h1>
+    <p class="lead reveal">Clientlink was started in 2021 by three operators who'd rebuilt the same CRM-funnel-email-booking-automation stack five times across five companies. Every time, the glue between tools was where revenue leaked. We finally decided to stop gluing.</p>
+  </div>
+</section>
+
+<!-- ============= MISSION ============= -->
+<section class="mission">
+  <div class="container">
+    <div class="mission-grid">
+      <div class="reveal">
+        <div class="eyebrow with-rule" style="margin-bottom:18px">The mission</div>
+        <h2 class="h2">Make growth<br>boring.</h2>
+        <p style="margin-top:28px">Growth shouldn't be a forensic exercise. It shouldn't take an ops engineer, a marketing operations consultant, and three Zapier zaps to figure out why a lead didn't get a follow-up email last Tuesday.</p>
+        <p><span class="hl">We believe a small team with the right workspace can out-execute a big team with the wrong stack.</span> So we built one — a single platform where every conversation, every deal, every campaign, and every automation share the same data, the same identity, and the same audit trail.</p>
+        <p>Our customers don't talk about Clientlink. They talk about their pipeline, their open rates, their close rate, the demos they booked last week. That's the goal. Make the software disappear; let the business show up.</p>
+      </div>
+      <div class="mission-side reveal">
+        <h4>How we measure success</h4>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Number of tools our customers cancel</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Time from import to first closed deal</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>How fast support replies — by an engineer</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Customer pipeline growth, not Clientlink ARR</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Net revenue retention &gt; 130% (we obsess over it)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= TIMELINE ============= -->
+<section class="timeline">
+  <div class="glow-c"></div>
+  <div class="container">
+    <div class="tl-head reveal">
+      <div class="eyebrow with-rule" style="justify-content:center;">The story</div>
+      <h2 class="h2" style="margin-top:18px">From three operators<br>to 12,400 teams.</h2>
+    </div>
+
+    <div class="tl-track">
+      <div class="tl-item left reveal">
+        <div class="tl-card">
+          <div class="tl-year">2021</div>
+          <div class="title">Three founders quit</div>
+          <p>Erin, Marcus, and Aida leave their growth-ops jobs in May. The first prototype — a CRM with email and a booking calendar duct-taped on — ships to ten beta customers by November.</p>
+        </div>
+        <div class="tl-dot"></div>
+        <div></div>
+      </div>
+      <div class="tl-item right reveal">
+        <div></div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-year">2022</div>
+          <div class="title">Seed round closes</div>
+          <p>$6.4M led by Foundation. 320 paying customers, 89% net-revenue retention. We ship Funnels and start telling people we want to replace eight tools.</p>
+        </div>
+      </div>
+      <div class="tl-item left reveal">
+        <div class="tl-card">
+          <div class="tl-year">2023</div>
+          <div class="title">Series A · automations land</div>
+          <p>$22M from Index. Workflow Automations and the unified inbox go GA — customers start cancelling Zapier and Mailchimp the same week. 2,800 teams onboard.</p>
+        </div>
+        <div class="tl-dot"></div>
+        <div></div>
+      </div>
+      <div class="tl-item right reveal">
+        <div></div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-year">2024</div>
+          <div class="title">AI Compose ships</div>
+          <p>The first version that drafts in your brand voice. Open rates jump 38% across the customer base, and we close our first six-figure deals with Series B SaaS companies.</p>
+        </div>
+      </div>
+      <div class="tl-item left reveal">
+        <div class="tl-card">
+          <div class="tl-year">2025</div>
+          <div class="title">Series B · SOC 2 · scale</div>
+          <p>$54M from Sequoia. SOC 2 Type II in March, HIPAA-eligible workloads in June. 9,800 teams, 84 staff, offices in SF, NYC, and Lisbon.</p>
+        </div>
+        <div class="tl-dot"></div>
+        <div></div>
+      </div>
+      <div class="tl-item right reveal">
+        <div></div>
+        <div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-year">2026</div>
+          <div class="title">Where we are now</div>
+          <p>12,400 teams. $1.8B in pipeline managed. AI Pipeline Copilot in beta. 132% net revenue retention. Still independent. Still hiring.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= STATS ============= -->
+<section class="stats-band">
+  <div class="container">
+    <div class="grid">
+      <div class="s reveal"><div class="v">84</div><div class="l">Staff across 3 offices</div></div>
+      <div class="s reveal"><div class="v">48</div><div class="l">Countries with active customers</div></div>
+      <div class="s reveal"><div class="v">132<span class="pl">%</span></div><div class="l">Net revenue retention</div></div>
+      <div class="s reveal"><div class="v">99.99<span class="pl">%</span></div><div class="l">Signed uptime SLA in 2025</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= VALUES ============= -->
+<section class="values">
+  <div class="container">
+    <div class="values-head reveal">
+      <div class="eyebrow with-rule">What we believe</div>
+      <h2 class="h2" style="margin-top:18px">Five posters<br>on the wall.</h2>
+    </div>
+    <div class="values-grid reveal">
+      <div class="value">
+        <div class="num">/ 01</div>
+        <h4>Ship the <span class="hl">smallest</span> useful thing.</h4>
+        <p>Every feature ships in a version a customer can use on day one. We'd rather ship one finished thing than five half-built ones. The roadmap is everyone's enemy; the changelog is everyone's friend.</p>
+      </div>
+      <div class="value">
+        <div class="num">/ 02</div>
+        <h4>Support is <span class="hl">product</span>.</h4>
+        <p>Our chat-support team is staffed by engineers. Median reply is four minutes. Tickets that touch code get fixed in code, in the same day, by the person who answered. There's no tier two.</p>
+      </div>
+      <div class="value">
+        <div class="num">/ 03</div>
+        <h4>Customers run <span class="hl">businesses</span>, not software.</h4>
+        <p>Every screen, every flow, every notification is designed for someone with a closed-won deal at the top of mind — not a feature to discover. If a button doesn't earn its place by the third use, we cut it.</p>
+      </div>
+      <div class="value">
+        <div class="num">/ 04</div>
+        <h4>The platform <span class="hl">disappears</span>.</h4>
+        <p>The best UI is one you stop thinking about. We hide complexity behind sensible defaults, never ask you to configure things to make them work, and stay invisible the rest of the time.</p>
+      </div>
+      <div class="value" style="grid-column:1 / span 2;">
+        <div class="num">/ 05</div>
+        <h4>Earn the renewal, <span class="hl">every month</span>.</h4>
+        <p>Yearly contracts are a trust contract, not a hostage situation. We don't gate exports. We don't auto-charge on day one of the trial. We don't introduce features then take them away. If we stop earning the renewal, you should be able to walk away the same day with all your data — and we're betting you won't.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= TEAM ============= -->
+<section class="team">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow with-rule">Leadership</div>
+      <h2 class="h2" style="margin-top:18px">Built by<br>operators.</h2>
+    </div>
+
+    <div class="team-grid">
+      <div class="person reveal">
+        <div class="face"><span class="initials">EM</span></div>
+        <div class="name">Erin Maslowski</div>
+        <div class="role">Co-founder &amp; CEO</div>
+        <div class="prev"><span class="lbl">Prev</span> · VP Growth, Stripe ·<br>Head of RevOps, Notion</div>
+      </div>
+      <div class="person reveal">
+        <div class="face"><span class="initials">MA</span></div>
+        <div class="name">Marcus Ade</div>
+        <div class="role">Co-founder &amp; CTO</div>
+        <div class="prev"><span class="lbl">Prev</span> · Staff Eng, Vercel ·<br>Eng lead, HubSpot Conversations</div>
+      </div>
+      <div class="person reveal">
+        <div class="face"><span class="initials">AC</span></div>
+        <div class="name">Aida Chen</div>
+        <div class="role">Co-founder &amp; Head of Design</div>
+        <div class="prev"><span class="lbl">Prev</span> · Design lead, Linear ·<br>Senior PD, Figma</div>
+      </div>
+      <div class="person reveal">
+        <div class="face"><span class="initials">RM</span></div>
+        <div class="name">Renata Martin</div>
+        <div class="role">VP Engineering</div>
+        <div class="prev"><span class="lbl">Prev</span> · Eng director, Twilio ·<br>Tech lead, Segment</div>
+      </div>
+      <div class="person reveal">
+        <div class="face"><span class="initials">JT</span></div>
+        <div class="name">James Tran</div>
+        <div class="role">VP Customer Success</div>
+        <div class="prev"><span class="lbl">Prev</span> · CS lead, Intercom ·<br>Founder, Northpath Agency</div>
+      </div>
+      <div class="person reveal">
+        <div class="face"><span class="initials">PD</span></div>
+        <div class="name">Priya Desai</div>
+        <div class="role">VP Marketing</div>
+        <div class="prev"><span class="lbl">Prev</span> · Head of brand, Loom ·<br>Growth, Webflow</div>
+      </div>
+      <div class="person reveal">
+        <div class="face"><span class="initials">SK</span></div>
+        <div class="name">Sara Kowalski</div>
+        <div class="role">VP Finance &amp; Operations</div>
+        <div class="prev"><span class="lbl">Prev</span> · Finance lead, Mercury ·<br>CFO-track, Brex</div>
+      </div>
+      <div class="person reveal">
+        <div class="face"><span class="initials">TO</span></div>
+        <div class="name">Tobi Okafor</div>
+        <div class="role">VP Sales</div>
+        <div class="prev"><span class="lbl">Prev</span> · Sales lead, Gong ·<br>Head of sales, Outreach</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= INVESTORS ============= -->
+<section class="investors">
+  <div class="container">
+    <h3>Backed by people who've built this before.</h3>
+    <div class="investors-row reveal">
+      <span class="l">SEQUOIA</span>
+      <span class="l">INDEX</span>
+      <span class="l">FOUNDATION</span>
+      <span class="l">FIRST&nbsp;ROUND</span>
+      <span class="l">SOUTH&nbsp;PARK</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============= OFFICES ============= -->
+<section class="offices">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow with-rule">Where we work</div>
+      <h2 class="h2" style="margin-top:18px">Three offices.<br>One workspace.</h2>
+    </div>
+
+    <div class="offices-grid">
+      <div class="office reveal">
+        <div class="city">San Francisco</div>
+        <div class="addr">548 Market St, Suite 92810<br>San Francisco, CA 94104<br>United States</div>
+        <div class="team">HQ · Engineering · Product</div>
+      </div>
+      <div class="office reveal">
+        <div class="city">New York</div>
+        <div class="addr">132 W 36th St, 12th Floor<br>New York, NY 10018<br>United States</div>
+        <div class="team">Sales · Customer Success · Marketing</div>
+      </div>
+      <div class="office reveal">
+        <div class="city">Lisbon</div>
+        <div class="addr">Rua dos Fanqueiros 12, 2º<br>1100-228 Lisboa<br>Portugal</div>
+        <div class="team">EMEA · Support · Engineering</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= FINAL CTA ============= -->
+<section class="final-cta">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner reveal">
+      <div class="eyebrow with-rule" style="justify-content:center; margin-bottom:24px">Want to help us</div>
+      <h2 class="h2">Make growth<br><span class="gradient-text">disappear.</span></h2>
+      <p class="lead">We're hiring across engineering, design, and customer success. Or — if you're a customer-shaped person — book a demo and tell us what we should fix.</p>
+      <div class="row">
+        <a class="btn btn-primary btn-lg" href="#careers">See open roles<span class="btn-arrow">→</span></a>
+        <a class="btn btn-ghost btn-lg" href="demo.html">Book a demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div><h5>Platform</h5><ul><li><a href="platform.html">Overview</a></li><li><a href="platform.html#crm">CRM</a></li><li><a href="platform.html#funnels">Funnels</a></li><li><a href="platform.html#email">Email &amp; SMS</a></li><li><a href="platform.html#booking">Booking</a></li><li><a href="platform.html#automations">Automations</a></li></ul></div>
+      <div><h5>Solutions</h5><ul><li><a href="#">Agencies</a></li><li><a href="#">Coaches</a></li><li><a href="#">Local services</a></li><li><a href="#">SaaS</a></li></ul></div>
+      <div><h5>Resources</h5><ul><li><a href="changelog.html">Changelog</a></li><li><a href="#">Templates</a></li><li><a href="#">Help center</a></li><li><a href="#">API docs</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="about.html">About</a></li><li><a href="customers.html">Customers</a></li><li><a href="#">Careers</a></li><li><a href="demo.html">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="#">Status</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/scripts.js"></script>
+</body>
+</html>

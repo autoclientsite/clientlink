@@ -1,0 +1,1917 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clientlink — Every conversation. Every deal. One workspace.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============== Brand tokens (lifted from Clientlink DS) ============== */
+  :root{
+    --ink-0:#0B0B0C; --ink-1:#131315; --ink-2:#1B1B1E; --ink-3:#232327;
+    --ink-4:#2C2C31; --ink-5:#3A3A40; --ink-6:#56565E; --ink-7:#7C7C85;
+    --ink-8:#A6A6AD; --ink-9:#D9D9DC; --ink-10:#FFFFFF;
+    --brand-cyan:#2DD4D0; --brand-teal:#14B8B0; --brand-blue:#2FB6E8;
+    --brand-mint:#6FE0A8; --brand-lime:#A8E063; --brand-pink:#E58FB5;
+    --accent:var(--brand-cyan); --accent-hover:#38E0DC; --accent-press:#1FB8B4;
+    --accent-soft:rgba(45,212,208,.16); --accent-ring:rgba(45,212,208,.35);
+    --success:#5DD39E; --warning:#F4B740; --danger:#F26D6D;
+    --line-soft:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.16);
+    --brand-gradient:linear-gradient(135deg,#2DD4D0 0%,#6FE0A8 45%,#A8E063 100%);
+    --brand-gradient-wide:linear-gradient(110deg,#2FB6E8 0%,#2DD4D0 30%,#6FE0A8 65%,#A8E063 100%);
+    --shadow-md:0 6px 18px rgba(0,0,0,.40), 0 1px 2px rgba(0,0,0,.5);
+    --shadow-lg:0 24px 48px -12px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.4);
+    --shadow-pop:0 18px 60px -10px rgba(45,212,208,.25), 0 8px 24px rgba(0,0,0,.5);
+    --shadow-inset:inset 0 1px 0 rgba(255,255,255,.06);
+    --ease-out:cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring:cubic-bezier(0.34, 1.56, 0.64, 1);
+    --font-display:"Bebas Neue", "Impact", "Arial Narrow Bold", sans-serif;
+    --font-body:"Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-mono:"JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { box-sizing:border-box; }
+  html, body { margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--ink-1);
+    color:var(--ink-9);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection { background:var(--accent-soft); color:#fff; }
+
+  a { color:inherit; text-decoration:none; }
+
+  /* ============== Typography utilities ============== */
+  .display, .h1, .h2, .h3 {
+    font-family:var(--font-display);
+    font-weight:400; /* Bebas only ships 400 */
+    text-transform:uppercase;
+    letter-spacing:0.005em;
+    line-height:1;
+    color:#fff;
+  }
+  .display { font-size:clamp(60px, 9.5vw, 168px); letter-spacing:-0.005em; }
+  .h1 { font-size:clamp(48px, 6.5vw, 112px); }
+  .h2 { font-size:clamp(40px, 5vw, 88px); }
+  .h3 { font-size:clamp(28px, 3.2vw, 48px); }
+  .eyebrow {
+    font-family:var(--font-body);
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    font-size:12px;
+    font-weight:600;
+    color:var(--brand-cyan);
+  }
+  .lead {
+    font-size:clamp(17px, 1.3vw, 20px);
+    line-height:1.55;
+    color:var(--ink-8);
+    font-weight:400;
+    max-width:56ch;
+  }
+  .micro {
+    font-family:var(--font-body);
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    font-size:11px;
+    font-weight:600;
+    color:var(--ink-7);
+  }
+  .gradient-text {
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    /* Slight outline for crispness at very large sizes */
+  }
+  .outline-text {
+    color:transparent;
+    -webkit-text-stroke:1.5px rgba(255,255,255,.45);
+  }
+
+  /* ============== Page chrome ============== */
+  .container { max-width:1280px; margin:0 auto; padding:0 32px; }
+  @media (max-width:720px){ .container { padding:0 20px; } }
+
+  /* ============== Nav ============== */
+  .nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:16px 0;
+    transition:all .3s var(--ease-out);
+  }
+  .nav.scrolled {
+    background:rgba(11,11,12,.72);
+    backdrop-filter:blur(20px) saturate(160%);
+    -webkit-backdrop-filter:blur(20px) saturate(160%);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-inner { display:flex; align-items:center; gap:48px; }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .brand-mark {
+    width:32px; height:32px; border-radius:8px;
+    background:var(--ink-1);
+    display:grid; place-items:center;
+    box-shadow:var(--shadow-inset);
+  }
+  .brand-mark img { width:32px; height:32px; display:block; }
+  .brand-name {
+    font-family:var(--font-body);
+    font-weight:700; font-size:17px; letter-spacing:-.01em;
+    color:#fff;
+  }
+  .nav-links { display:flex; gap:28px; margin-left:8px; }
+  .nav-links a {
+    font-size:14px; color:var(--ink-8); font-weight:500;
+    transition:color .15s var(--ease-out);
+  }
+  .nav-links a:hover { color:#fff; }
+  .nav-actions { margin-left:auto; display:flex; gap:12px; align-items:center; }
+  @media (max-width:880px){ .nav-links { display:none; } }
+
+  /* ============== Buttons ============== */
+  .btn {
+    display:inline-flex; align-items:center; gap:8px;
+    height:44px; padding:0 22px;
+    border-radius:10px;
+    font-family:var(--font-body);
+    font-size:14px; font-weight:600;
+    letter-spacing:.01em;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:all .18s var(--ease-out);
+    white-space:nowrap;
+  }
+  .btn-primary {
+    background:var(--brand-gradient);
+    color:#0B1A1A;
+    box-shadow:0 0 0 0 rgba(45,212,208,0), var(--shadow-md);
+    position:relative;
+  }
+  .btn-primary:hover {
+    box-shadow:0 0 32px rgba(45,212,208,.35), 0 0 0 0 rgba(45,212,208,0), var(--shadow-pop);
+    transform:translateY(-1px);
+  }
+  .btn-primary:active { transform:translateY(1px); }
+  .btn-ghost {
+    background:transparent; color:#fff;
+    border-color:var(--line-strong);
+  }
+  .btn-ghost:hover {
+    background:rgba(255,255,255,.04);
+    border-color:rgba(255,255,255,.28);
+    box-shadow:0 0 24px rgba(45,212,208,.18);
+  }
+  .btn-link {
+    background:transparent; color:var(--ink-9);
+    padding:0; height:auto;
+  }
+  .btn-link:hover { color:var(--brand-cyan); }
+  .btn-sm { height:36px; padding:0 16px; font-size:13px; }
+  .btn-lg { height:54px; padding:0 28px; font-size:15px; }
+
+  .btn-arrow { display:inline-block; transition:transform .2s var(--ease-out); }
+  .btn:hover .btn-arrow { transform:translateX(3px); }
+
+  /* ============== Ambient gradient glow ============== */
+  .glow-tl, .glow-br {
+    position:absolute; pointer-events:none; z-index:0;
+    border-radius:50%;
+    filter:blur(120px);
+    opacity:.45;
+  }
+  .glow-tl {
+    top:-200px; left:-200px; width:780px; height:780px;
+    background:radial-gradient(circle, rgba(45,212,208,.55) 0%, rgba(111,224,168,.25) 35%, transparent 70%);
+  }
+  .glow-br {
+    bottom:-260px; right:-200px; width:680px; height:680px;
+    background:radial-gradient(circle, rgba(168,224,99,.35) 0%, rgba(47,182,232,.18) 40%, transparent 70%);
+    opacity:.3;
+  }
+
+  /* ============== Hero ============== */
+  .hero {
+    position:relative;
+    padding:160px 0 0;
+    overflow:hidden;
+  }
+  .hero-inner { position:relative; z-index:2; }
+
+  .hero-eyebrow-pill {
+    display:inline-flex; align-items:center; gap:10px;
+    height:34px; padding:0 14px 0 8px;
+    border-radius:999px;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--line-soft);
+    font-size:12.5px; color:var(--ink-9); font-weight:500;
+    margin-bottom:32px;
+  }
+  .hero-eyebrow-pill .dot {
+    width:20px; height:20px; border-radius:999px;
+    background:var(--brand-gradient);
+    display:grid; place-items:center;
+    font-size:11px; color:#0B1A1A; font-weight:700;
+  }
+  .hero-eyebrow-pill .sep { width:1px; height:12px; background:var(--line-strong); }
+  .hero-eyebrow-pill .ar { color:var(--brand-cyan); font-size:11px; }
+
+  .hero-title {
+    max-width:18ch;
+  }
+  .hero-title .line-a { display:block; }
+  .hero-title .line-b { display:block; }
+  .hero-title .line-c { display:block; }
+
+  .hero-meta {
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:64px;
+    margin-top:36px;
+    align-items:end;
+  }
+  .hero-meta .lead { font-size:18px; }
+  .hero-cta-row {
+    display:flex; flex-wrap:wrap; gap:14px; align-items:center;
+    margin-top:28px;
+  }
+  .hero-trust {
+    font-size:12.5px; color:var(--ink-7);
+    margin-top:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .hero-trust .dot-g { width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 10px var(--success); }
+
+  @media (max-width:880px){
+    .hero-meta { grid-template-columns:1fr; gap:24px; }
+  }
+
+  /* ============== Sticky dashboard scroller ============== */
+  .scrolly {
+    position:relative;
+    padding:80px 0 120px;
+  }
+  .scrolly-inner {
+    display:grid;
+    grid-template-columns:1fr 1.1fr;
+    gap:80px;
+    align-items:flex-start;
+  }
+  .scrolly-sticky {
+    position:sticky;
+    top:80px;
+    height:calc(100vh - 120px);
+    max-height:780px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .scrolly-panels {
+    display:flex; flex-direction:column;
+    gap:0;
+  }
+  .scrolly-panel {
+    min-height:55vh;
+    padding:40px 0;
+    display:flex; flex-direction:column; justify-content:center;
+    opacity:.25;
+    transition:opacity .5s var(--ease-out);
+  }
+  .scrolly-panel.is-active { opacity:1; }
+  .scrolly-panel .eyebrow { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .scrolly-panel .eyebrow .num {
+    font-family:var(--font-display);
+    font-size:48px; line-height:1; color:transparent;
+    -webkit-text-stroke:1px var(--brand-cyan);
+    letter-spacing:0;
+  }
+  .scrolly-panel h3 { margin:0 0 18px; }
+  .scrolly-panel p { color:var(--ink-8); font-size:17px; line-height:1.55; margin:0 0 22px; max-width:46ch; }
+  .scrolly-panel .feat-row { display:flex; flex-direction:column; gap:10px; max-width:46ch; }
+  .scrolly-panel .feat-row .feat {
+    display:flex; align-items:center; gap:12px;
+    font-size:14.5px; color:var(--ink-9);
+  }
+  .scrolly-panel .feat svg { color:var(--brand-cyan); flex:none; }
+
+  @media (max-width:1000px){
+    .scrolly-inner { grid-template-columns:1fr; gap:0; }
+    .scrolly-sticky { position:relative; top:auto; height:auto; max-height:none; padding:40px 0; }
+    .scrolly-panel { min-height:auto; padding:40px 0; opacity:1; }
+  }
+
+  /* ============== Dashboard mockup ============== */
+  .dash-frame {
+    width:100%;
+    max-width:880px;
+    aspect-ratio:16/10;
+    border-radius:18px;
+    background:var(--ink-2);
+    border:1px solid var(--line-soft);
+    box-shadow:var(--shadow-lg), var(--shadow-inset), 0 0 80px rgba(45,212,208,.08);
+    overflow:hidden;
+    position:relative;
+    transform:perspective(2000px) rotateX(0.5deg);
+  }
+  .dash-frame::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.04) 0%, transparent 30%, transparent 80%, rgba(0,0,0,.25) 100%);
+    border-radius:18px;
+  }
+  .dash-titlebar {
+    height:36px;
+    background:linear-gradient(180deg, var(--ink-3) 0%, var(--ink-2) 100%);
+    border-bottom:1px solid var(--line-soft);
+    display:flex; align-items:center; padding:0 14px;
+    gap:8px;
+    position:relative; z-index:2;
+  }
+  .dash-titlebar .dot { width:11px; height:11px; border-radius:50%; }
+  .dash-titlebar .r { background:#ff5f57; }
+  .dash-titlebar .y { background:#febc2e; }
+  .dash-titlebar .g { background:#28c840; }
+  .dash-titlebar .addr {
+    margin:0 auto;
+    font-family:var(--font-mono); font-size:11px; color:var(--ink-7);
+    padding:4px 12px; background:var(--ink-1); border-radius:6px;
+    border:1px solid var(--line-soft);
+  }
+
+  .dash-body {
+    display:grid;
+    grid-template-columns:200px 1fr;
+    height:calc(100% - 36px);
+  }
+
+  .dash-side {
+    background:var(--ink-1);
+    border-right:1px solid var(--line-soft);
+    padding:14px 10px;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .dash-side .ws {
+    display:flex; align-items:center; gap:10px;
+    padding:8px 8px 12px; border-bottom:1px solid var(--line-soft); margin-bottom:10px;
+  }
+  .dash-side .ws-mark { width:24px; height:24px; border-radius:6px; background:var(--ink-1); display:grid; place-items:center; }
+  .dash-side .ws-mark img { width:24px; height:24px; }
+  .dash-side .ws-name { font-size:12.5px; font-weight:600; color:#fff; }
+  .dash-side .ws-org { font-size:10.5px; color:var(--ink-7); }
+  .dash-side .ws-caret { margin-left:auto; color:var(--ink-7); font-size:12px; }
+
+  .dash-side .cta-btn {
+    height:32px; border-radius:8px;
+    background:var(--brand-gradient); color:#0B1A1A;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    font-size:11.5px; font-weight:600;
+    margin-bottom:14px;
+  }
+
+  .dash-side .label {
+    font-size:9.5px; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--ink-7); padding:8px 8px 4px; font-weight:600;
+  }
+  .dash-side .nav-item {
+    display:flex; align-items:center; gap:10px;
+    padding:7px 8px; border-radius:6px;
+    font-size:12px; color:var(--ink-8);
+    transition:all .15s var(--ease-out);
+  }
+  .dash-side .nav-item.active {
+    background:rgba(45,212,208,.10); color:#fff;
+  }
+  .dash-side .nav-item.active svg { color:var(--brand-cyan); }
+  .dash-side .nav-item svg { flex:none; color:var(--ink-7); }
+  .dash-side .nav-item .count {
+    margin-left:auto; font-size:10px; color:var(--ink-7);
+  }
+  .dash-side .nav-item.active .count {
+    background:var(--brand-cyan); color:#0B1A1A;
+    padding:1px 6px; border-radius:999px; font-weight:700;
+  }
+
+  .dash-main {
+    padding:18px 22px;
+    overflow:hidden;
+    position:relative;
+  }
+  .dash-topbar {
+    display:flex; align-items:center; gap:12px;
+    padding-bottom:14px; border-bottom:1px solid var(--line-soft);
+    margin-bottom:18px;
+  }
+  .dash-topbar .title { font-family:var(--font-body); font-size:14px; font-weight:700; color:#fff; }
+  .dash-topbar .sub { font-size:11.5px; color:var(--ink-7); }
+  .dash-topbar .search {
+    margin-left:auto; height:28px; width:240px;
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    border-radius:6px; display:flex; align-items:center; gap:8px;
+    padding:0 10px; font-size:11px; color:var(--ink-7);
+  }
+
+  /* ============== Dashboard views (swappable) ============== */
+  .dash-view {
+    position:absolute;
+    inset:0;
+    padding:18px 22px;
+    transition:opacity .6s var(--ease-out), transform .6s var(--ease-out);
+    opacity:0;
+    transform:translateY(12px);
+    pointer-events:none;
+  }
+  .dash-view.is-active {
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+
+  /* View: CRM / dashboard KPIs */
+  .view-crm .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+  .view-crm .kpi {
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    border-radius:10px; padding:12px; box-shadow:var(--shadow-inset);
+  }
+  .view-crm .kpi .l { font-size:9.5px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.1em; font-weight:600; }
+  .view-crm .kpi .v { display:flex; align-items:baseline; gap:6px; margin-top:6px; }
+  .view-crm .kpi .v .n { font-size:22px; font-weight:700; color:#fff; letter-spacing:-.02em; }
+  .view-crm .kpi .v .d { font-size:10.5px; font-weight:600; color:var(--success); }
+  .view-crm .kpi .v .d.neg { color:var(--danger); }
+  .view-crm .kpi .s { font-size:10px; color:var(--ink-7); margin-top:2px; }
+  .view-crm .row2 { display:grid; grid-template-columns:1.7fr 1fr; gap:10px; height:calc(100% - 90px); }
+  .view-crm .panel {
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    border-radius:10px; padding:14px; box-shadow:var(--shadow-inset);
+    overflow:hidden;
+  }
+  .view-crm .panel-h { display:flex; align-items:center; margin-bottom:8px; }
+  .view-crm .panel-h .t { font-size:11.5px; font-weight:600; color:#fff; }
+  .view-crm .panel-h .a { margin-left:auto; font-size:9.5px; color:var(--ink-7); }
+  .view-crm .panel .stat {
+    display:flex; align-items:baseline; gap:8px; margin-bottom:8px;
+  }
+  .view-crm .panel .stat .n { font-size:20px; font-weight:700; color:#fff; letter-spacing:-.02em; }
+  .view-crm .panel .stat .d { font-size:10.5px; color:var(--success); font-weight:600; }
+  .view-crm .chart {
+    height:80px; display:flex; align-items:flex-end; gap:3px;
+    padding-top:6px;
+  }
+  .view-crm .chart .bar {
+    flex:1; border-radius:2px 2px 0 0;
+    background:linear-gradient(180deg, var(--brand-cyan) 0%, var(--brand-lime) 100%);
+    opacity:.85;
+  }
+  .view-crm .stages .stage {
+    padding:7px 0; border-bottom:1px solid var(--line-soft);
+  }
+  .view-crm .stages .stage:last-child { border-bottom:none; }
+  .view-crm .stages .sr {
+    display:flex; align-items:center; gap:6px; font-size:10.5px;
+  }
+  .view-crm .stages .sd { width:6px; height:6px; border-radius:50%; }
+  .view-crm .stages .sn { color:var(--ink-9); font-weight:500; }
+  .view-crm .stages .sc { margin-left:auto; color:var(--ink-7); }
+  .view-crm .stages .sv { color:var(--ink-7); margin-left:8px; font-size:10px; }
+  .view-crm .stages .sb {
+    height:3px; background:var(--ink-3); border-radius:999px; margin-top:5px; overflow:hidden;
+  }
+  .view-crm .stages .sb i { display:block; height:100%; border-radius:999px; }
+
+  /* View: Funnels */
+  .view-funnels .funnel-canvas {
+    position:relative; height:100%;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,.05) 1px, transparent 0) 0 0/24px 24px,
+      var(--ink-1);
+    border-radius:10px;
+    border:1px solid var(--line-soft);
+    overflow:hidden;
+  }
+  .view-funnels .fnode {
+    position:absolute;
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:8px; padding:10px 12px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    min-width:120px;
+  }
+  .view-funnels .fnode .ft { font-size:10px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.1em; font-weight:600; }
+  .view-funnels .fnode .fn { font-size:11.5px; color:#fff; font-weight:600; margin-top:2px; }
+  .view-funnels .fnode .fm { font-size:10px; color:var(--ink-7); margin-top:6px; display:flex; align-items:center; gap:5px; }
+  .view-funnels .fnode .fm .ico { color:var(--brand-cyan); }
+  .view-funnels .fnode.cyan { box-shadow:var(--shadow-md), var(--shadow-inset), 0 0 0 1px rgba(45,212,208,.4), 0 0 24px rgba(45,212,208,.18); }
+  .view-funnels .fnode.cyan .ft { color:var(--brand-cyan); }
+
+  .view-funnels .conv-stats {
+    position:absolute; right:14px; top:14px;
+    background:rgba(11,11,12,.7); backdrop-filter:blur(10px);
+    border:1px solid var(--line-soft); border-radius:8px;
+    padding:10px 12px; min-width:140px;
+  }
+  .view-funnels .conv-stats .l { font-size:9.5px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.1em; font-weight:600; }
+  .view-funnels .conv-stats .v { font-size:22px; font-weight:700; color:#fff; letter-spacing:-.02em; margin-top:4px; }
+  .view-funnels .conv-stats .d { font-size:10px; color:var(--success); font-weight:600; margin-top:2px; }
+  .view-funnels .conv-stats .mini {
+    height:18px; display:flex; align-items:flex-end; gap:2px; margin-top:6px;
+  }
+  .view-funnels .conv-stats .mini .b { flex:1; background:var(--brand-cyan); opacity:.6; border-radius:1px; }
+
+  /* SVG lines for funnel */
+  .view-funnels .flines {
+    position:absolute; inset:0; width:100%; height:100%;
+    pointer-events:none;
+  }
+  .view-funnels .flines path {
+    stroke:rgba(45,212,208,.5); stroke-width:1.5; fill:none;
+    stroke-dasharray:4 4;
+  }
+
+  /* View: Email */
+  .view-email { display:grid; grid-template-columns:240px 1fr; gap:14px; }
+  .view-email .elist {
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    border-radius:10px; padding:10px 0; box-shadow:var(--shadow-inset);
+    display:flex; flex-direction:column;
+  }
+  .view-email .elist .ehd { padding:6px 14px 10px; border-bottom:1px solid var(--line-soft); }
+  .view-email .elist .ehd .et { font-size:11.5px; font-weight:600; color:#fff; }
+  .view-email .elist .ehd .esub { font-size:10px; color:var(--ink-7); margin-top:2px; }
+  .view-email .elist .er {
+    padding:9px 14px; border-bottom:1px solid var(--line-soft);
+    display:flex; flex-direction:column; gap:2px;
+    cursor:pointer; transition:background .15s var(--ease-out);
+  }
+  .view-email .elist .er:hover { background:var(--ink-2); }
+  .view-email .elist .er.active { background:rgba(45,212,208,.07); border-left:2px solid var(--brand-cyan); padding-left:12px; }
+  .view-email .elist .er .ert { font-size:11px; font-weight:600; color:#fff; display:flex; align-items:center; gap:6px; }
+  .view-email .elist .er .dot { width:5px; height:5px; border-radius:50%; background:var(--brand-cyan); }
+  .view-email .elist .er .ers { font-size:9.5px; color:var(--ink-7); display:flex; gap:10px; }
+  .view-email .elist .er .ers .pos { color:var(--success); }
+
+  .view-email .ecompose {
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    border-radius:10px; padding:14px; box-shadow:var(--shadow-inset);
+    display:flex; flex-direction:column;
+  }
+  .view-email .ecompose .ec-row {
+    display:flex; align-items:center; gap:8px;
+    padding:6px 0; border-bottom:1px solid var(--line-soft);
+    font-size:10.5px;
+  }
+  .view-email .ecompose .ec-row .label { color:var(--ink-7); width:44px; }
+  .view-email .ecompose .ec-row .val { color:var(--ink-9); }
+  .view-email .ecompose .ec-row .chip {
+    background:var(--accent-soft); color:var(--brand-cyan);
+    padding:2px 8px; border-radius:999px; font-size:10px; font-weight:500;
+  }
+  .view-email .ecompose .ec-subj {
+    padding:10px 0; font-size:13px; font-weight:600; color:#fff;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .view-email .ecompose .ec-body {
+    padding:12px 0; flex:1;
+    font-size:11px; color:var(--ink-8); line-height:1.55;
+  }
+  .view-email .ecompose .ec-body p { margin:0 0 9px; }
+  .view-email .ecompose .ec-body .hl { color:#fff; font-weight:500; }
+  .view-email .ecompose .ec-cta {
+    display:inline-flex; height:24px; padding:0 12px; border-radius:6px;
+    background:var(--brand-gradient); color:#0B1A1A; font-weight:600;
+    align-items:center; font-size:10px; margin:4px 0;
+  }
+  .view-email .ecompose .ec-bottom {
+    display:flex; align-items:center; gap:8px;
+    border-top:1px solid var(--line-soft); padding-top:10px;
+  }
+  .view-email .ecompose .ec-bottom .ai {
+    display:inline-flex; align-items:center; gap:6px;
+    background:rgba(168,224,99,.12); color:var(--brand-lime);
+    padding:4px 10px; border-radius:999px; font-size:10px; font-weight:600;
+  }
+  .view-email .ecompose .ec-bottom .send {
+    margin-left:auto;
+    background:var(--brand-gradient); color:#0B1A1A;
+    padding:5px 12px; border-radius:6px; font-size:10.5px; font-weight:600;
+  }
+
+  /* ============== Section base ============== */
+  section { position:relative; }
+  .section { padding:140px 0; position:relative; }
+  .section-head {
+    margin-bottom:80px;
+    max-width:1100px;
+  }
+  .section-head .eyebrow { margin-bottom:18px; display:inline-flex; align-items:center; gap:10px; }
+  .section-head .eyebrow::before {
+    content:""; width:24px; height:1px; background:var(--brand-cyan);
+  }
+
+  /* ============== Features grid ============== */
+  .features {
+    border-top:1px solid var(--line-soft);
+  }
+  .features-grid {
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line-soft);
+    border:1px solid var(--line-soft);
+    border-radius:18px;
+    overflow:hidden;
+  }
+  .feat-card {
+    background:var(--ink-1);
+    padding:40px 32px;
+    min-height:280px;
+    display:flex; flex-direction:column;
+    position:relative;
+    transition:background .25s var(--ease-out);
+    cursor:default;
+    overflow:hidden;
+  }
+  .feat-card::before {
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(45,212,208,.10) 0%, transparent 50%);
+    opacity:0; transition:opacity .3s var(--ease-out);
+    pointer-events:none;
+  }
+  .feat-card:hover { background:var(--ink-2); }
+  .feat-card:hover::before { opacity:1; }
+  .feat-card .ico {
+    width:48px; height:48px; border-radius:12px;
+    background:rgba(45,212,208,.10);
+    border:1px solid rgba(45,212,208,.22);
+    display:grid; place-items:center;
+    color:var(--brand-cyan);
+    margin-bottom:32px;
+    transition:all .25s var(--ease-out);
+  }
+  .feat-card:hover .ico {
+    background:rgba(45,212,208,.18);
+    box-shadow:0 0 32px rgba(45,212,208,.25);
+  }
+  .feat-card h4 {
+    font-family:var(--font-display);
+    font-size:32px; text-transform:uppercase;
+    margin:0 0 18px; color:#fff;
+    line-height:1; letter-spacing:.005em;
+  }
+  .feat-card p {
+    font-size:14.5px; color:var(--ink-8);
+    margin:0; line-height:1.55;
+    flex:1;
+  }
+  .feat-card .more {
+    margin-top:28px;
+    font-size:12px; color:var(--brand-cyan); font-weight:600;
+    text-transform:uppercase; letter-spacing:.14em;
+    display:flex; align-items:center; gap:8px;
+    opacity:.7; transition:opacity .2s var(--ease-out), gap .2s var(--ease-out);
+  }
+  .feat-card:hover .more { opacity:1; gap:12px; }
+
+  @media (max-width:900px){ .features-grid { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:600px){ .features-grid { grid-template-columns:1fr; } }
+
+  /* ============== Replaces (comparison) ============== */
+  .replaces {
+    border-top:1px solid var(--line-soft);
+  }
+  .replaces-flex {
+    display:grid;
+    grid-template-columns:1.05fr 1fr;
+    gap:80px;
+    align-items:center;
+  }
+  .replaces-left h2 { margin:0; }
+  .replaces-left p { color:var(--ink-8); margin-top:24px; max-width:46ch; font-size:17px; }
+  .replaces-stats { display:flex; gap:48px; margin-top:36px; }
+  .replaces-stats .s { display:flex; flex-direction:column; gap:4px; }
+  .replaces-stats .s .v {
+    font-family:var(--font-display); font-size:56px; line-height:1; color:#fff;
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .replaces-stats .s .l { font-size:12px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.14em; font-weight:600; }
+
+  .replaces-right { position:relative; }
+  .tool-chip {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:14px;
+    padding:18px 22px;
+    display:flex; align-items:center; gap:14px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    position:relative;
+    transition:all .3s var(--ease-out);
+  }
+  .tool-chip .logo {
+    width:36px; height:36px; border-radius:8px;
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    display:grid; place-items:center; flex:none;
+    font-family:var(--font-body); font-weight:700; font-size:14px;
+  }
+  .tool-chip .name { font-size:14px; font-weight:600; color:#fff; }
+  .tool-chip .cat { font-size:11.5px; color:var(--ink-7); margin-top:1px; }
+  .tool-chip .strike {
+    margin-left:auto;
+    display:flex; align-items:center; gap:6px;
+    font-size:11px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.1em; font-weight:600;
+  }
+  .tool-chip .strike .s-icon { width:16px; height:16px; border-radius:50%; background:var(--danger); display:grid; place-items:center; color:#0B1A1A; }
+  .tool-chip:hover { transform:translateX(-4px); box-shadow:var(--shadow-pop), var(--shadow-inset); }
+
+  .tool-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:14px;
+    position:relative;
+  }
+  .tool-grid::before {
+    content:""; position:absolute; inset:-40px;
+    background:radial-gradient(circle at 50% 50%, rgba(45,212,208,.08) 0%, transparent 60%);
+    z-index:-1;
+  }
+
+  @media (max-width:900px){
+    .replaces-flex { grid-template-columns:1fr; gap:48px; }
+    .tool-grid { grid-template-columns:1fr; }
+  }
+
+  /* ============== Metrics strip ============== */
+  .metrics {
+    border-top:1px solid var(--line-soft);
+    padding:80px 0;
+  }
+  .metrics-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+  }
+  .metrics-grid .m {
+    padding:0 32px;
+    border-left:1px solid var(--line-soft);
+  }
+  .metrics-grid .m:first-child { border-left:none; padding-left:0; }
+  .metrics-grid .m .v {
+    font-family:var(--font-display);
+    font-size:clamp(56px, 7vw, 96px); line-height:.95;
+    color:#fff;
+  }
+  .metrics-grid .m .v .pl { color:var(--brand-cyan); }
+  .metrics-grid .m .l {
+    font-size:13px; color:var(--ink-8); margin-top:12px; max-width:24ch; line-height:1.4;
+  }
+  @media (max-width:880px){
+    .metrics-grid { grid-template-columns:repeat(2,1fr); gap:32px 0; }
+    .metrics-grid .m { padding:0 16px; }
+    .metrics-grid .m:nth-child(odd) { border-left:none; padding-left:0; }
+  }
+
+  /* ============== Testimonials ============== */
+  .testimonials {
+    border-top:1px solid var(--line-soft);
+  }
+  .test-grid {
+    display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:24px;
+    grid-template-rows:auto auto;
+  }
+  .test {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:18px; padding:32px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    display:flex; flex-direction:column;
+    transition:all .25s var(--ease-out);
+    position:relative;
+    overflow:hidden;
+  }
+  .test:hover {
+    background:var(--ink-3);
+    box-shadow:var(--shadow-pop), var(--shadow-inset);
+    transform:translateY(-3px);
+  }
+  .test.big { grid-row:1 / span 2; padding:40px; }
+  .test.big .quote { font-size:24px; line-height:1.35; }
+  .test .stars { display:flex; gap:2px; color:var(--brand-lime); margin-bottom:18px; }
+  .test .quote {
+    font-family:var(--font-body);
+    font-size:16px; line-height:1.5; color:var(--ink-9);
+    font-weight:400;
+    flex:1;
+  }
+  .test .quote .hl { color:#fff; font-weight:600; background:linear-gradient(120deg, transparent 0%, rgba(45,212,208,.12) 50%, transparent 100%); padding:0 2px; }
+  .test .who {
+    margin-top:28px; display:flex; align-items:center; gap:12px;
+    padding-top:20px; border-top:1px solid var(--line-soft);
+  }
+  .test .ava {
+    width:40px; height:40px; border-radius:50%;
+    background:var(--brand-gradient);
+    display:grid; place-items:center;
+    color:#0B1A1A; font-weight:700; font-size:14px;
+    flex:none;
+  }
+  .test .who .n { font-size:14px; font-weight:600; color:#fff; }
+  .test .who .r { font-size:12px; color:var(--ink-7); margin-top:1px; }
+  .test .metric-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:5px 10px; border-radius:999px;
+    background:rgba(168,224,99,.12); color:var(--brand-lime);
+    font-size:11.5px; font-weight:600;
+    margin-bottom:14px;
+    align-self:flex-start;
+  }
+
+  @media (max-width:1000px){
+    .test-grid { grid-template-columns:1fr 1fr; }
+    .test.big { grid-row:auto; grid-column:1 / span 2; }
+  }
+  @media (max-width:640px){
+    .test-grid { grid-template-columns:1fr; }
+    .test.big { grid-column:auto; }
+  }
+
+  /* ============== Final CTA ============== */
+  .final-cta {
+    border-top:1px solid var(--line-soft);
+    position:relative;
+    overflow:hidden;
+  }
+  .final-cta .inner {
+    text-align:center;
+    max-width:980px;
+    margin:0 auto;
+    position:relative; z-index:2;
+  }
+  .final-cta h2 { font-size:clamp(56px, 9vw, 144px); margin:0 0 28px; }
+  .final-cta .lead { margin:0 auto 40px; font-size:18px; color:var(--ink-8); max-width:60ch; }
+  .final-cta .row { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  .final-cta .reassure {
+    margin-top:28px;
+    font-size:12.5px; color:var(--ink-7);
+    display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+  }
+  .final-cta .reassure span { display:flex; align-items:center; gap:6px; }
+  .final-cta .reassure svg { color:var(--success); }
+
+  .final-cta .bg-glow {
+    position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    width:120%; height:600px;
+    background:radial-gradient(ellipse at center, rgba(45,212,208,.20) 0%, rgba(168,224,99,.08) 35%, transparent 70%);
+    filter:blur(60px);
+    z-index:1;
+    pointer-events:none;
+  }
+
+  /* ============== Footer ============== */
+  footer {
+    border-top:1px solid var(--line-soft);
+    padding:64px 0 32px;
+    background:var(--ink-0);
+  }
+  .footer-top {
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;
+    gap:48px;
+    margin-bottom:56px;
+  }
+  .footer-top h5 {
+    font-size:11px; text-transform:uppercase; letter-spacing:.16em;
+    color:var(--ink-7); font-weight:600;
+    margin:0 0 18px;
+    font-family:var(--font-body);
+  }
+  .footer-top ul { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:11px; }
+  .footer-top a {
+    font-size:14px; color:var(--ink-9);
+    transition:color .15s var(--ease-out);
+  }
+  .footer-top a:hover { color:var(--brand-cyan); }
+  .footer-top .brandcol p { color:var(--ink-7); font-size:13px; line-height:1.55; margin:14px 0 0; max-width:36ch; }
+  .footer-bottom {
+    display:flex; align-items:center; gap:16px;
+    padding-top:24px; border-top:1px solid var(--line-soft);
+    font-size:12.5px; color:var(--ink-7);
+    flex-wrap:wrap;
+  }
+  .footer-bottom .copy { flex:1; }
+  .footer-bottom .links { display:flex; gap:24px; }
+  .footer-bottom .links a:hover { color:var(--ink-9); }
+
+  @media (max-width:880px){
+    .footer-top { grid-template-columns:1fr 1fr; gap:32px; }
+  }
+
+  /* ============== Reveal animations ============== */
+  .reveal {
+    opacity:0; transform:translateY(20px);
+    transition:opacity .8s var(--ease-out), transform .8s var(--ease-out);
+  }
+  .reveal.in { opacity:1; transform:translateY(0); }
+
+  /* ============== Misc ============== */
+  .pulse-ring {
+    position:absolute; width:8px; height:8px; border-radius:50%; background:var(--success);
+  }
+  .pulse-ring::before {
+    content:""; position:absolute; inset:0; border-radius:50%; background:var(--success);
+    animation:pulse 2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { transform:scale(1); opacity:.6; }
+    100% { transform:scale(4); opacity:0; }
+  }
+
+  .marquee-wrap {
+    overflow:hidden;
+    border-top:1px solid var(--line-soft);
+    border-bottom:1px solid var(--line-soft);
+    padding:24px 0;
+    margin-top:80px;
+  }
+  .marquee {
+    display:flex; gap:64px;
+    animation:marquee 50s linear infinite;
+    white-space:nowrap;
+  }
+  .marquee span {
+    font-family:var(--font-display); font-size:24px; color:var(--ink-7);
+    text-transform:uppercase; letter-spacing:.05em;
+    display:flex; align-items:center; gap:64px;
+  }
+  .marquee span::after {
+    content:""; width:6px; height:6px; border-radius:50%; background:var(--brand-cyan);
+  }
+  @keyframes marquee {
+    to { transform:translateX(-50%); }
+  }
+
+  .hero-stats {
+    display:flex; gap:48px;
+    margin-top:48px;
+    padding-top:32px;
+    border-top:1px solid var(--line-soft);
+  }
+  .hero-stats .s .v {
+    font-family:var(--font-display);
+    font-size:48px; line-height:1; color:#fff;
+  }
+  .hero-stats .s .v.g {
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-stats .s .l {
+    font-size:12px; color:var(--ink-7);
+    text-transform:uppercase; letter-spacing:.14em; font-weight:600;
+    margin-top:8px;
+  }
+
+  /* hero dashboard staging */
+  .hero-stage {
+    margin-top:64px;
+    position:relative;
+  }
+  .hero-stage .frame-wrap {
+    position:relative;
+    max-width:1180px; margin:0 auto;
+  }
+  .hero-stage .frame-wrap::before {
+    content:""; position:absolute;
+    left:50%; top:60%; transform:translateX(-50%);
+    width:90%; height:160px;
+    background:radial-gradient(ellipse at center, rgba(45,212,208,.30) 0%, rgba(168,224,99,.15) 40%, transparent 70%);
+    filter:blur(50px);
+    z-index:0;
+  }
+  .hero-stage .dash-frame { position:relative; z-index:1; max-width:none; }
+
+  /* responsive hero scale */
+  @media (max-width:700px){
+    .dash-frame { aspect-ratio:4/3; }
+    .dash-body { grid-template-columns:1fr; }
+    .dash-side { display:none; }
+  }
+
+  /* scroll-dot indicator */
+  .scroll-cue {
+    display:inline-flex; align-items:center; gap:10px;
+    font-size:11.5px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.16em; font-weight:600;
+    margin-top:48px;
+  }
+  .scroll-cue .line {
+    display:inline-block; width:36px; height:1px; background:var(--brand-cyan);
+    position:relative; overflow:hidden;
+  }
+  .scroll-cue .line::after {
+    content:""; position:absolute; inset:0; background:#fff;
+    animation:scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { transform:translateX(-100%); }
+    100% { transform:translateX(100%); }
+  }
+
+  /* ============================ PRINT ============================ */
+  @media print {
+    @page { size: A4 landscape; margin: 0.5cm; }
+    html, body {
+      background:#0B0B0C !important;
+      overflow:visible !important;
+      -webkit-print-color-adjust:exact !important;
+      print-color-adjust:exact !important;
+    }
+    /* Make all reveal items fully visible */
+    .reveal, .reveal.in {
+      opacity:1 !important; transform:none !important;
+      transition:none !important; animation:none !important;
+    }
+    *, *::before, *::after {
+      animation:none !important;
+      transition:none !important;
+    }
+
+    /* Floating nav becomes a static block */
+    .nav { position:static !important; background:rgba(11,11,12,.95) !important; backdrop-filter:none !important; border-bottom:1px solid var(--line-soft) !important; }
+
+    /* Drop fixed/sticky and tall sticky viewport heights */
+    .hero-stage, .dash-frame { transform:none !important; }
+    .scrolly-sticky {
+      position:static !important;
+      height:auto !important; max-height:none !important;
+      page-break-before:always; break-before:page;
+    }
+    .scrolly-inner { display:block !important; }
+    .scrolly-panel {
+      min-height:0 !important;
+      padding:24px 0 !important;
+      opacity:1 !important;
+      page-break-inside:avoid; break-inside:avoid;
+    }
+    /* In print we just show the CRM view of the dashboard once */
+    .scrolly-sticky .dash-view { display:none !important; }
+    .scrolly-sticky .dash-view[data-view="crm"] {
+      display:block !important; position:relative !important; opacity:1 !important; transform:none !important;
+    }
+    .hero-stage .dash-view { display:none !important; }
+    .hero-stage .dash-view[data-view="crm"] {
+      display:block !important; position:relative !important; opacity:1 !important; transform:none !important;
+    }
+
+    /* Force background gradients & colors to render */
+    .glow-tl, .glow-br, .glow-c, .bg-glow {
+      print-color-adjust:exact !important; -webkit-print-color-adjust:exact !important;
+    }
+    .btn-primary, .gradient-text, .tl-year, .release-meta .tag.major,
+    .saver-card.gradient .val, .replaces-stats .s .v,
+    .featured-metrics .fm .v, .case .headline .hl,
+    .person:hover .face .initials, .tl-year, .ec-cta, .ws .ws-mark img {
+      print-color-adjust:exact !important; -webkit-print-color-adjust:exact !important;
+    }
+
+    /* Page-break rhythm — start a fresh page at each top-level section */
+    .hero, section.section, section.scrolly, .metrics, .testimonials, .final-cta, footer {
+      page-break-inside:avoid; break-inside:avoid;
+    }
+    .section, .metrics, .testimonials, .final-cta {
+      page-break-before:always; break-before:page;
+      padding:48px 0 !important;
+    }
+    .hero { padding-top:32px !important; padding-bottom:48px !important; }
+
+    /* Keep cards intact */
+    .feat-card, .tool-chip, .test, .metrics-grid .m, .scrolly-panel,
+    .marquee-wrap, .hero-stats, .replaces-flex, .features-grid,
+    .test-grid, .head-metrics, .footer-top, .footer-bottom {
+      page-break-inside:avoid; break-inside:avoid;
+    }
+
+    /* Marquee — show only the first set, no animation */
+    .marquee { animation:none !important; transform:none !important; }
+    .marquee span:nth-child(2) { display:none !important; }
+
+    /* Hide pulse halo (browsers print weird) */
+    .pulse-ring::before, .scroll-cue .line::after { display:none !important; }
+
+    /* Tighten oversized type a touch for print */
+    .display { font-size:96px !important; }
+    .h1 { font-size:80px !important; }
+    .h2 { font-size:64px !important; }
+    .h3 { font-size:40px !important; }
+
+    /* Make sure features grid stays 3 cols even on smaller paper widths */
+    .features-grid { grid-template-columns:repeat(3, 1fr) !important; }
+  }
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#131315">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#2DD4D0"/>
+        <stop offset="50%" stop-color="#6FE0A8"/>
+        <stop offset="100%" stop-color="#A8E063"/>
+      </linearGradient>
+    </defs>
+    <g transform="translate(600 400)">
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90"
+               fill="none" stroke="url(#g)" stroke-width="14" stroke-linejoin="round"/>
+      <polygon points="-40,-70 80,0 -40,70" fill="url(#g)"/>
+    </g>
+  </svg>
+</template>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#">
+      <span class="brand-mark"><img src="assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="customers.html">Customers</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="demo.html">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="glow-tl"></div>
+  <div class="container hero-inner">
+
+    <div class="hero-eyebrow-pill reveal">
+      <span class="dot">✦</span>
+      <span>Spring &#39;26 — AI Pipeline copilot is live</span>
+      <span class="sep"></span>
+      <span class="ar">Read the launch →</span>
+    </div>
+
+    <h1 class="display hero-title reveal">
+      <span class="line-a">Every lead.</span>
+      <span class="line-b">Every deal.</span>
+      <span class="line-c"><span class="gradient-text">One workspace.</span></span>
+    </h1>
+
+    <div class="hero-meta reveal">
+      <p class="lead">Clientlink is the all-in-one growth platform replacing eight disconnected tools. Capture leads, automate follow-ups, close deals, and grow revenue — without stitching subscriptions together. If I modify do you see? </p>
+      <div>
+        <div class="hero-cta-row">
+          <a class="btn btn-primary btn-lg" href="demo.html">Start free trial<span class="btn-arrow">→</span></a>
+          <a class="btn btn-ghost btn-lg" href="demo.html">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Watch the 90s tour
+          </a>
+        </div>
+        <div class="hero-trust">
+          <span class="dot-g"></span>
+          14-day trial · No card required · Cancel anytime
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-stats reveal">
+      <div class="s"><div class="v g">12,400</div><div class="l">Teams onboarded</div></div>
+      <div class="s"><div class="v">$1.8B</div><div class="l">Pipeline managed</div></div>
+      <div class="s"><div class="v">+34<span style="color:var(--brand-cyan)">%</span></div><div class="l">Avg. close rate lift</div></div>
+      <div class="s"><div class="v">4.9<span style="color:var(--brand-lime)">★</span></div><div class="l">G2 / Capterra rating</div></div>
+    </div>
+
+    <div class="scroll-cue reveal"><span class="line"></span>Scroll to explore</div>
+
+    <!-- hero dashboard preview -->
+    <div class="hero-stage reveal" id="heroStage">
+      <div class="frame-wrap">
+        <div class="dash-frame" id="heroFrame">
+          <div class="dash-titlebar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="addr">app.clientlink.io / workspace / acme-co</span>
+          </div>
+          <div class="dash-body">
+            <aside class="dash-side">
+              <div class="ws">
+                <span class="ws-mark"><img src="assets/clientlink-mark.png" alt=""></span>
+                <div><div class="ws-name">Clientlink</div><div class="ws-org">Acme Co.</div></div>
+                <span class="ws-caret">⌄</span>
+              </div>
+              <div class="cta-btn">+ Add contact</div>
+              <div class="label">Workspace</div>
+              <div class="nav-item active" data-view="crm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Dashboard</div>
+              <div class="nav-item" data-view="crm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Contacts<span class="count">2,418</span></div>
+              <div class="nav-item" data-view="crm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M3 3v18h18"/><rect x="7" y="13" width="3" height="6"/><rect x="12" y="9" width="3" height="10"/><rect x="17" y="6" width="3" height="13"/></svg>Pipeline</div>
+              <div class="nav-item" data-view="funnels"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>Funnels</div>
+              <div class="nav-item" data-view="email"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Campaigns<span class="count">3</span></div>
+              <div class="label">Grow</div>
+              <div class="nav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendar</div>
+              <div class="nav-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Automations</div>
+            </aside>
+
+            <div class="dash-main">
+              <div class="dash-topbar" id="topbar">
+                <div>
+                  <div class="title" id="viewTitle">Dashboard</div>
+                  <div class="sub" id="viewSub">Today — pipeline at a glance</div>
+                </div>
+                <div class="search">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  Search contacts, deals, threads...
+                </div>
+              </div>
+
+              <!-- VIEW: CRM -->
+              <div class="dash-view view-crm is-active" data-view="crm">
+                <div style="position:relative;">
+                  <div class="kpis">
+                    <div class="kpi"><div class="l">Pipeline value</div><div class="v"><span class="n">$248,400</span><span class="d">+14%</span></div><div class="s">vs last 30d</div></div>
+                    <div class="kpi"><div class="l">Deals closed</div><div class="v"><span class="n">27</span><span class="d">+8</span></div><div class="s">this month</div></div>
+                    <div class="kpi"><div class="l">Active contacts</div><div class="v"><span class="n">2,418</span><span class="d">+312</span></div><div class="s">this month</div></div>
+                    <div class="kpi"><div class="l">Response time</div><div class="v"><span class="n">4.2m</span><span class="d neg">−18%</span></div><div class="s">median first reply</div></div>
+                  </div>
+                  <div class="row2">
+                    <div class="panel">
+                      <div class="panel-h"><span class="t">Revenue · last 30 days</span><span class="a">30d ▾</span></div>
+                      <div class="stat"><span class="n">$214,800</span><span class="d">+22% vs prev period</span></div>
+                      <div class="chart" id="heroChart"></div>
+                    </div>
+                    <div class="panel">
+                      <div class="panel-h"><span class="t">Deals by stage</span><span class="a">⋯</span></div>
+                      <div class="stages">
+                        <div class="stage"><div class="sr"><span class="sd" style="background:#56565E"></span><span class="sn">New lead</span><span class="sc">18</span><span class="sv">$92,400</span></div><div class="sb"><i style="width:90%;background:#56565E"></i></div></div>
+                        <div class="stage"><div class="sr"><span class="sd" style="background:#2DD4D0"></span><span class="sn">Qualified</span><span class="sc">11</span><span class="sv">$74,600</span></div><div class="sb"><i style="width:64%;background:#2DD4D0"></i></div></div>
+                        <div class="stage"><div class="sr"><span class="sd" style="background:#6FE0A8"></span><span class="sn">Demo booked</span><span class="sc">7</span><span class="sv">$61,300</span></div><div class="sb"><i style="width:42%;background:#6FE0A8"></i></div></div>
+                        <div class="stage"><div class="sr"><span class="sd" style="background:#A8E063"></span><span class="sn">Proposal</span><span class="sc">4</span><span class="sv">$48,100</span></div><div class="sb"><i style="width:30%;background:#A8E063"></i></div></div>
+                        <div class="stage"><div class="sr"><span class="sd" style="background:#5DD39E"></span><span class="sn">Won</span><span class="sc">27</span><span class="sv">$214,800</span></div><div class="sb"><i style="width:96%;background:#5DD39E"></i></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VIEW: Funnels -->
+              <div class="dash-view view-funnels" data-view="funnels">
+                <div class="funnel-canvas">
+                  <svg class="flines" viewBox="0 0 700 400" preserveAspectRatio="none">
+                    <path d="M 110 80 C 180 80, 200 200, 290 200"/>
+                    <path d="M 110 240 C 200 240, 220 280, 290 280"/>
+                    <path d="M 410 200 C 480 200, 500 130, 560 130"/>
+                    <path d="M 410 200 C 480 200, 500 270, 560 270"/>
+                  </svg>
+                  <div class="fnode" style="left:14px; top:48px;">
+                    <div class="ft">Trigger</div>
+                    <div class="fn">Form submitted</div>
+                    <div class="fm"><span class="ico">▸</span> 1,284 / week</div>
+                  </div>
+                  <div class="fnode" style="left:14px; top:208px;">
+                    <div class="ft">Source</div>
+                    <div class="fn">Paid ad — Meta</div>
+                    <div class="fm"><span class="ico">▸</span> 642 / week</div>
+                  </div>
+                  <div class="fnode cyan" style="left:42%; top:172px;">
+                    <div class="ft">AI Routing</div>
+                    <div class="fn">Score &amp; route lead</div>
+                    <div class="fm"><span class="ico">✦</span> Auto-qualify</div>
+                  </div>
+                  <div class="fnode" style="right:14px; top:104px;">
+                    <div class="ft">Action</div>
+                    <div class="fn">Book demo</div>
+                    <div class="fm"><span class="ico">▸</span> 312 / week</div>
+                  </div>
+                  <div class="fnode" style="right:14px; top:240px;">
+                    <div class="ft">Action</div>
+                    <div class="fn">Send drip · 5 emails</div>
+                    <div class="fm"><span class="ico">▸</span> 972 / week</div>
+                  </div>
+
+                  <div class="conv-stats">
+                    <div class="l">Conversion · 30d</div>
+                    <div class="v">38.4%</div>
+                    <div class="d">+6.2pp vs prev</div>
+                    <div class="mini">
+                      <div class="b" style="height:30%"></div><div class="b" style="height:55%"></div><div class="b" style="height:42%"></div><div class="b" style="height:68%"></div><div class="b" style="height:80%"></div><div class="b" style="height:72%"></div><div class="b" style="height:96%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VIEW: Email -->
+              <div class="dash-view view-email" data-view="email">
+                <div class="elist">
+                  <div class="ehd"><div class="et">Campaigns</div><div class="esub">3 active · 1 draft</div></div>
+                  <div class="er active">
+                    <div class="ert"><span class="dot"></span> Q2 demo nurture</div>
+                    <div class="ers"><span>Sent 4,820</span><span class="pos">+38% open</span></div>
+                  </div>
+                  <div class="er">
+                    <div class="ert">Welcome series · 5 emails</div>
+                    <div class="ers"><span>Auto · 312/day</span><span class="pos">42% reply</span></div>
+                  </div>
+                  <div class="er">
+                    <div class="ert">Pricing recap · paid leads</div>
+                    <div class="ers"><span>Sent 1,140</span><span class="pos">+19% click</span></div>
+                  </div>
+                  <div class="er">
+                    <div class="ert">Renewal — Tier 1 accounts</div>
+                    <div class="ers"><span>Draft</span><span>—</span></div>
+                  </div>
+                </div>
+                <div class="ecompose">
+                  <div class="ec-row"><span class="label">From</span><span class="val">erin@acme.co</span></div>
+                  <div class="ec-row"><span class="label">To</span><span class="chip">Demo booked · 312</span><span class="chip" style="background:rgba(168,224,99,.14); color:var(--brand-lime);">VIP · 28</span></div>
+                  <div class="ec-subj">Quick follow-up after your demo — your custom rollout plan</div>
+                  <div class="ec-body">
+                    <p>Hi <span class="hl">{{first_name}}</span>,</p>
+                    <p>Thanks for taking time with our team last week. Based on what you shared about <span class="hl">{{primary_challenge}}</span>, we put together a 30-day rollout your ops lead can run on Monday.</p>
+                    <p>One-click below — no commitment, just the plan.</p>
+                    <span class="ec-cta">View your rollout plan →</span>
+                    <p>Erin</p>
+                  </div>
+                  <div class="ec-bottom">
+                    <span class="ai">✦ AI compose — Tone: confident</span>
+                    <span class="send">Schedule send ▾</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== SCROLLYTELLING ===================== -->
+<section class="scrolly" id="scrolly">
+  <div class="container scrolly-inner">
+    <div class="scrolly-panels">
+      <div class="scrolly-panel is-active" data-view="crm">
+        <div class="eyebrow"><span class="num">01</span> Customer relationships</div>
+        <h3 class="h3">A CRM that <span class="gradient-text">actually closes</span> deals.</h3>
+        <p>Every contact, conversation, and deal in one timeline. Forecast revenue with the same data your reps use to close. No more spreadsheets, no more guessing.</p>
+        <div class="feat-row">
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Unified inbox — email, SMS, Instagram, WhatsApp</div>
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Drag-and-drop pipeline with revenue forecasting</div>
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Auto-enrich every lead with firmographics</div>
+        </div>
+      </div>
+
+      <div class="scrolly-panel" data-view="funnels">
+        <div class="eyebrow"><span class="num">02</span> Funnels &amp; landing pages</div>
+        <h3 class="h3">Launch a funnel <span class="gradient-text">in an afternoon</span>.</h3>
+        <p>Build landing pages, multi-step funnels, and full websites with a drag-and-drop canvas. AI scores every visitor and routes the hot ones straight to your calendar.</p>
+        <div class="feat-row">
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>140+ pre-built funnel templates</div>
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Native A/B testing on every step</div>
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>AI lead scoring &amp; smart routing</div>
+        </div>
+      </div>
+
+      <div class="scrolly-panel" data-view="email">
+        <div class="eyebrow"><span class="num">03</span> Email &amp; automation</div>
+        <h3 class="h3">Follow-ups that <span class="gradient-text">sound like you</span>.</h3>
+        <p>Broadcast, drip, and triggered sequences across email and SMS. AI Compose drafts messages in your voice — your team just hits send (or schedules it).</p>
+        <div class="feat-row">
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>AI Compose with brand voice training</div>
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Visual workflow builder · 60+ triggers</div>
+          <div class="feat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>Deliverability tools built in (no Mailchimp)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scrolly-sticky">
+      <!-- This frame mirrors the hero frame and is swapped by JS -->
+      <div class="dash-frame" id="stickyFrame" style="display:none"></div>
+      <!-- We re-use hero frame via JS by relocating; fallback empty -->
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES GRID ===================== -->
+<section class="section features" id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">The platform</div>
+      <h2 class="h2">Six tools.<br><span class="outline-text">One subscription.</span></h2>
+    </div>
+
+    <div class="features-grid reveal">
+
+      <div class="feat-card">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h4>CRM</h4>
+        <p>Contacts, pipeline, deals, and revenue in one timeline. Forecasting your team can trust.</p>
+        <div class="more">Explore CRM →</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg></div>
+        <h4>Funnels</h4>
+        <p>Landing pages, multi-step funnels, and full websites — drag, drop, publish.</p>
+        <div class="more">Build a funnel →</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <h4>Email &amp; SMS</h4>
+        <p>Broadcast, drip, and triggered sequences. Deliverability built in.</p>
+        <div class="more">Send a campaign →</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <h4>Booking</h4>
+        <p>Calendars, round-robin scheduling, and automatic reminders. Goodbye Calendly.</p>
+        <div class="more">Open booking →</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <h4>AI automation</h4>
+        <p>60+ triggers, conditional logic, and AI Compose in your brand voice — set once, run forever.</p>
+        <div class="more">See automations →</div>
+      </div>
+
+      <div class="feat-card">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+        <h4>Reputation</h4>
+        <p>Review requests, social listening, and a single reply inbox across every channel you sell on.</p>
+        <div class="more">Manage reviews →</div>
+      </div>
+
+    </div>
+
+    <!-- Marquee of integrations / buzz -->
+    <div class="marquee-wrap reveal">
+      <div class="marquee">
+        <span>Stripe · Slack · Zapier · Google · Meta · Twilio · QuickBooks · HubSpot import · Mailchimp import · Shopify · WhatsApp · SendGrid</span>
+        <span>Stripe · Slack · Zapier · Google · Meta · Twilio · QuickBooks · HubSpot import · Mailchimp import · Shopify · WhatsApp · SendGrid</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REPLACES ===================== -->
+<section class="section replaces" id="replaces">
+  <div class="container">
+    <div class="replaces-flex">
+      <div class="replaces-left reveal">
+        <div class="eyebrow" style="margin-bottom:18px">The math</div>
+        <h2 class="h2">Cancel <span class="gradient-text">eight</span> tools.<br>Keep the work.</h2>
+        <p>Your stack is leaking money. The average growth team pays for 8+ overlapping subscriptions, then pays a freelancer to glue them together. Clientlink replaces the lot — one login, one bill, one source of truth.</p>
+        <div class="replaces-stats">
+          <div class="s"><div class="v">$1,840</div><div class="l">Avg. monthly stack saved</div></div>
+          <div class="s"><div class="v">94%</div><div class="l">Of customers consolidate within 30d</div></div>
+        </div>
+      </div>
+
+      <div class="replaces-right reveal">
+        <div class="tool-grid">
+          <div class="tool-chip"><div class="logo" style="color:#FF7A59">H</div><div><div class="name">HubSpot</div><div class="cat">CRM</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+          <div class="tool-chip"><div class="logo" style="color:#6DD16D">M</div><div><div class="name">Mailchimp</div><div class="cat">Email</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+          <div class="tool-chip"><div class="logo" style="color:#5B6CFF">C</div><div><div class="name">ClickFunnels</div><div class="cat">Funnels</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+          <div class="tool-chip"><div class="logo" style="color:#0067DC">C</div><div><div class="name">Calendly</div><div class="cat">Booking</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+          <div class="tool-chip"><div class="logo" style="color:#F22F46">T</div><div><div class="name">Twilio Studio</div><div class="cat">SMS &amp; voice</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+          <div class="tool-chip"><div class="logo" style="color:#FF4A00">Z</div><div><div class="name">Zapier</div><div class="cat">Automation</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+          <div class="tool-chip"><div class="logo" style="color:#FFCD00">T</div><div><div class="name">Typeform</div><div class="cat">Surveys</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+          <div class="tool-chip"><div class="logo" style="color:#FF9500">B</div><div><div class="name">Birdeye</div><div class="cat">Reputation</div></div><div class="strike"><span class="s-icon">✕</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== METRICS ===================== -->
+<section class="metrics">
+  <div class="container">
+    <div class="metrics-grid">
+      <div class="m reveal"><div class="v">+34<span class="pl">%</span></div><div class="l">Average close-rate lift after 60 days</div></div>
+      <div class="m reveal"><div class="v">12<span class="pl">×</span></div><div class="l">Faster lead response than legacy CRMs</div></div>
+      <div class="m reveal"><div class="v">$1.8<span class="pl">B</span></div><div class="l">Annualized pipeline managed in Clientlink</div></div>
+      <div class="m reveal"><div class="v">4.9<span class="pl">★</span></div><div class="l">G2 average across 2,100+ reviews</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TESTIMONIALS ===================== -->
+<section class="section testimonials" id="testimonials">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Customers</div>
+      <h2 class="h2">Teams growing on<br>Clientlink.</h2>
+    </div>
+
+    <div class="test-grid reveal">
+      <div class="test big">
+        <div class="metric-pill">↑ 3.2× revenue in 11 months</div>
+        <div class="stars">★★★★★</div>
+        <div class="quote">
+          “We killed seven subscriptions the week we switched. <span class="hl">Our pipeline grew 3.2× in under a year</span> because the team finally stopped fighting their tools. The AI follow-ups alone pay for the platform — every lead gets a thoughtful reply within four minutes, day or night.”
+        </div>
+        <div class="who">
+          <div class="ava">EM</div>
+          <div><div class="n">Erin Maslowski</div><div class="r">VP Growth · Acme Co.</div></div>
+        </div>
+      </div>
+
+      <div class="test">
+        <div class="metric-pill">↑ 42% reply rate</div>
+        <div class="stars">★★★★★</div>
+        <div class="quote">
+          “Setup took an afternoon. Our reps haven't opened a spreadsheet in six months — <span class="hl">forecasting just works</span>.”
+        </div>
+        <div class="who">
+          <div class="ava" style="background:linear-gradient(135deg,#2FB6E8,#6FE0A8)">JT</div>
+          <div><div class="n">James Tran</div><div class="r">Founder · Northpath Agency</div></div>
+        </div>
+      </div>
+
+      <div class="test">
+        <div class="metric-pill">↓ 4.2m response time</div>
+        <div class="stars">★★★★★</div>
+        <div class="quote">
+          “The AI copilot drafts every follow-up in our voice. <span class="hl">It's like hiring a 24/7 sales coordinator</span>.”
+        </div>
+        <div class="who">
+          <div class="ava" style="background:linear-gradient(135deg,#6FE0A8,#A8E063)">PD</div>
+          <div><div class="n">Priya Desai</div><div class="r">COO · Lumen Studio</div></div>
+        </div>
+      </div>
+
+      <div class="test">
+        <div class="metric-pill">−$2,200/mo saved</div>
+        <div class="stars">★★★★★</div>
+        <div class="quote">
+          “One platform replaced HubSpot, Calendly, Mailchimp, and three Zapier zaps. <span class="hl">Same outcome, a fifth of the cost</span>.”
+        </div>
+        <div class="who">
+          <div class="ava" style="background:linear-gradient(135deg,#A8E063,#2DD4D0)">MA</div>
+          <div><div class="n">Marcus Ade</div><div class="r">Co-founder · BrightDeck Co.</div></div>
+        </div>
+      </div>
+
+      <div class="test">
+        <div class="metric-pill">↑ 28% conversion</div>
+        <div class="stars">★★★★★</div>
+        <div class="quote">
+          “Funnel A/B tests that used to take a week ship in twenty minutes. <span class="hl">Conversion is up 28% quarter-over-quarter</span>.”
+        </div>
+        <div class="who">
+          <div class="ava" style="background:linear-gradient(135deg,#E58FB5,#2FB6E8)">SK</div>
+          <div><div class="n">Sara Kowalski</div><div class="r">Head of Marketing · Mesa Health</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FINAL CTA ===================== -->
+<section class="section final-cta" id="demo">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner reveal">
+      <div class="eyebrow" style="justify-content:center; margin-bottom:24px">Ready when you are</div>
+      <h2 class="h2">See it on <span class="gradient-text">your pipeline.</span></h2>
+      <p class="lead">Book a 20-minute platform demo. We'll connect your data, build one funnel, and show you exactly what your stack would look like consolidated.</p>
+      <div class="row">
+        <a class="btn btn-primary btn-lg" href="demo.html">Book a free demo<span class="btn-arrow">→</span></a>
+        <a class="btn btn-ghost btn-lg" href="demo.html">Start 14-day trial</a>
+      </div>
+      <div class="reassure">
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>No credit card</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Import from HubSpot, Mailchimp, Calendly</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>SOC 2 Type II · GDPR ready</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div>
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="platform.html">Overview</a></li>
+          <li><a href="platform.html#crm">CRM</a></li>
+          <li><a href="platform.html#funnels">Funnels</a></li>
+          <li><a href="platform.html#email">Email &amp; SMS</a></li>
+          <li><a href="platform.html#booking">Booking</a></li>
+          <li><a href="platform.html#automations">Automations</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Solutions</h5>
+        <ul>
+          <li><a href="#">Agencies</a></li>
+          <li><a href="#">Coaches</a></li>
+          <li><a href="#">Local services</a></li>
+          <li><a href="#">SaaS</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="changelog.html">Changelog</a></li>
+          <li><a href="#">Templates</a></li>
+          <li><a href="#">Help center</a></li>
+          <li><a href="#">API docs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="customers.html">Customers</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="demo.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="security.html">Security</a>
+        <a href="#">Status</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ============== Nav scroll state ==============
+  const nav = document.getElementById('nav');
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 24) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+    lastY = y;
+  }, { passive: true });
+
+  // ============== Reveal-on-scroll ==============
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Initial state - reveal hero items quickly
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('in'), 80 + i * 90);
+    });
+  });
+
+  // ============== Hero chart - light animated bars ==============
+  const chart = document.getElementById('heroChart');
+  if (chart) {
+    const heights = [42,38,55,49,62,58,71,66,79,74,88,82,91,86,98];
+    chart.innerHTML = heights.map(h => `<div class="bar" style="height:${h}%"></div>`).join('');
+  }
+
+  // ============== Scrollytelling - swap dashboard views ==============
+  // We promote the hero dashboard frame into a "sticky-aware" element by
+  // observing which scrolly panel is active and swapping the .dash-view inside the hero frame.
+
+  const panels = document.querySelectorAll('.scrolly-panel');
+  const heroFrame = document.getElementById('heroFrame');
+  const stickySlot = document.querySelector('.scrolly-sticky');
+  const heroStage = document.getElementById('heroStage');
+
+  const viewMeta = {
+    crm:     { title: 'Dashboard',          sub: 'Today — pipeline at a glance' },
+    funnels: { title: 'Funnel — Demo book', sub: 'Live · last 7 days conversion' },
+    email:   { title: 'Campaigns',          sub: '3 active · drafting Q2 nurture' },
+  };
+
+  function setView(name) {
+    document.querySelectorAll('.dash-view').forEach(v => {
+      v.classList.toggle('is-active', v.dataset.view === name);
+    });
+    document.querySelectorAll('.dash-side .nav-item').forEach(n => {
+      const isMatch = n.dataset.view === name;
+      // only switch active state on items that have a data-view
+      if (n.dataset.view) {
+        n.classList.toggle('active', isMatch && (n.textContent.trim().startsWith('Funnels') || n.textContent.trim().startsWith('Campaigns') || (name === 'crm' && n.textContent.trim().startsWith('Dashboard'))));
+      }
+    });
+    // Force activation: for crm, highlight Dashboard; for funnels, highlight Funnels; for email, highlight Campaigns
+    document.querySelectorAll('.dash-side .nav-item').forEach(n => n.classList.remove('active'));
+    const map = { crm: 'Dashboard', funnels: 'Funnels', email: 'Campaigns' };
+    const wanted = map[name];
+    document.querySelectorAll('.dash-side .nav-item').forEach(n => {
+      if (n.textContent.trim().startsWith(wanted)) n.classList.add('active');
+    });
+    const meta = viewMeta[name];
+    if (meta) {
+      document.getElementById('viewTitle').textContent = meta.title;
+      document.getElementById('viewSub').textContent = meta.sub;
+    }
+  }
+
+  // Move the hero dashboard into the sticky slot once the user scrolls past hero.
+  // Simpler: leave hero frame in place; use IntersectionObserver on panels to swap view.
+  const panelIO = new IntersectionObserver((entries) => {
+    let best = null;
+    let bestRatio = 0;
+    for (const e of entries) {
+      if (e.isIntersecting && e.intersectionRatio > bestRatio) {
+        best = e.target;
+        bestRatio = e.intersectionRatio;
+      }
+    }
+    if (best) {
+      panels.forEach(p => p.classList.toggle('is-active', p === best));
+      const view = best.dataset.view;
+      if (view) setView(view);
+    }
+  }, { threshold: [0.35, 0.6], rootMargin: '-20% 0px -20% 0px' });
+  panels.forEach(p => panelIO.observe(p));
+
+  // ============== Sticky dashboard relocation ==============
+  // The hero frame remains visible in the hero. When the user scrolls into the
+  // scrolly section, the same frame relocates to the sticky slot. We do this
+  // by toggling a CSS class on the hero-stage's parent that switches its
+  // position to fixed within the scrolly section.
+
+  const scrolly = document.getElementById('scrolly');
+  let stickyOn = false;
+  function updateStickyDash() {
+    if (!heroFrame || !scrolly) return;
+    const sr = scrolly.getBoundingClientRect();
+    const hs = document.querySelector('.hero-stage');
+    // Activate sticky mode while the scrolly section is in view
+    const inScrolly = sr.top < window.innerHeight * 0.5 && sr.bottom > window.innerHeight * 0.5;
+    if (inScrolly && !stickyOn) {
+      stickyOn = true;
+      hs.classList.add('hs-pinned');
+    } else if (!inScrolly && stickyOn) {
+      stickyOn = false;
+      hs.classList.remove('hs-pinned');
+    }
+  }
+  // Not using pin-to-fixed approach to avoid layout jumps. Instead, the sticky
+  // slot in .scrolly will visually carry the dashboard via duplication.
+  // Build a clone of the hero frame inside the sticky slot.
+  if (heroFrame && stickySlot) {
+    const clone = heroFrame.cloneNode(true);
+    clone.id = 'stickyFrameClone';
+    clone.style.display = 'block';
+    stickySlot.innerHTML = '';
+    stickySlot.appendChild(clone);
+  }
+
+  // Override setView to update BOTH frames (hero + clone).
+  function setViewBoth(name) {
+    [heroFrame, document.getElementById('stickyFrameClone')].forEach(frame => {
+      if (!frame) return;
+      frame.querySelectorAll('.dash-view').forEach(v => {
+        v.classList.toggle('is-active', v.dataset.view === name);
+      });
+      frame.querySelectorAll('.dash-side .nav-item').forEach(n => n.classList.remove('active'));
+      const map = { crm: 'Dashboard', funnels: 'Funnels', email: 'Campaigns' };
+      const wanted = map[name];
+      frame.querySelectorAll('.dash-side .nav-item').forEach(n => {
+        if (n.textContent.trim().startsWith(wanted)) n.classList.add('active');
+      });
+      const meta = viewMeta[name];
+      if (meta) {
+        const t = frame.querySelector('#viewTitle, .dash-topbar .title');
+        const s = frame.querySelector('#viewSub, .dash-topbar .sub');
+        if (t) t.textContent = meta.title;
+        if (s) s.textContent = meta.sub;
+      }
+    });
+  }
+
+  // Replace the simple setView with the dual variant
+  const _origPanelIO = panelIO;
+  panelIO.disconnect();
+  const panelIO2 = new IntersectionObserver((entries) => {
+    let best = null;
+    let bestRatio = 0;
+    for (const e of entries) {
+      if (e.isIntersecting && e.intersectionRatio > bestRatio) {
+        best = e.target;
+        bestRatio = e.intersectionRatio;
+      }
+    }
+    if (best) {
+      panels.forEach(p => p.classList.toggle('is-active', p === best));
+      const view = best.dataset.view;
+      if (view) setViewBoth(view);
+    }
+  }, { threshold: [0.35, 0.6], rootMargin: '-25% 0px -25% 0px' });
+  panels.forEach(p => panelIO2.observe(p));
+
+  // ============== Hide hero frame as we enter scrolly so the clone takes over ==============
+  // Visual continuity: fade the hero frame out as the sticky clone comes in.
+  const fadeIO = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const hs = document.querySelector('.hero-stage');
+      if (e.isIntersecting) {
+        hs.style.opacity = '0';
+        hs.style.transform = 'translateY(-30px)';
+      } else if (e.boundingClientRect.top > 0) {
+        // scrolly is below — hero visible
+        hs.style.opacity = '';
+        hs.style.transform = '';
+      }
+    }
+  }, { threshold: 0.15 });
+  fadeIO.observe(scrolly);
+
+  // ============== Mouse parallax on hero frame ==============
+  const stage = document.getElementById('heroStage');
+  if (stage && matchMedia('(pointer:fine)').matches) {
+    stage.addEventListener('mousemove', (e) => {
+      const rect = stage.getBoundingClientRect();
+      const mx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const my = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      heroFrame.style.transform = `perspective(2000px) rotateX(${0.5 - my * 1.2}deg) rotateY(${mx * 1.2}deg)`;
+    });
+    stage.addEventListener('mouseleave', () => {
+      heroFrame.style.transform = 'perspective(2000px) rotateX(0.5deg)';
+    });
+  }
+
+  // ============== Feature card spotlight hover ==============
+  document.querySelectorAll('.feat-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${((e.clientX - r.left)/r.width)*100}%`);
+      card.style.setProperty('--my', `${((e.clientY - r.top)/r.height)*100}%`);
+    });
+  });
+
+  // ============== Subtle parallax on hero glow ==============
+  const glow = document.querySelector('.hero .glow-tl');
+  if (glow) {
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < 1200) glow.style.transform = `translate(${y * 0.05}px, ${y * 0.18}px)`;
+    }, { passive: true });
+  }
+
+  // ============== Hero stats: subtle count up ==============
+  // Skip count-up for simplicity — values displayed statically.
+
+  // ============== Smooth scroll for in-page anchors ==============
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const href = a.getAttribute('href');
+      if (href.length < 2) return;
+      const t = document.querySelector(href);
+      if (!t) return;
+      e.preventDefault();
+      const top = t.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+</script>
+
+<script>
+  // ============== Auto-print ==============
+  (async function () {
+    try {
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+    } catch (_) {}
+    // Force the dashboard to its default CRM view before printing
+    document.querySelectorAll('.dash-view').forEach(v => {
+      v.classList.toggle('is-active', v.dataset.view === 'crm');
+    });
+    // Wait for images to load (best-effort)
+    await Promise.all(
+      [...document.images].map(img => img.complete
+        ? Promise.resolve()
+        : new Promise(res => { img.addEventListener('load', res); img.addEventListener('error', res); })
+      )
+    );
+    await new Promise(r => setTimeout(r, 600));
+    window.print();
+  })();
+</script>
+
+</body>
+</html>

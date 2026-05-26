@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security — Clientlink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .s-hero { padding:180px 0 80px; position:relative; overflow:hidden; }
+  .s-hero h1 { max-width:14ch; }
+  .s-hero .lead { margin-top:28px; max-width:54ch; }
+
+  /* ============= Compliance badges ============= */
+  .badges {
+    margin-top:64px;
+    display:grid; grid-template-columns:repeat(5, 1fr); gap:16px;
+  }
+  @media (max-width:900px){ .badges { grid-template-columns:repeat(3, 1fr); } }
+  @media (max-width:540px){ .badges { grid-template-columns:repeat(2, 1fr); } }
+  .badge {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:16px; padding:24px 20px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    text-align:center;
+    transition:all .25s var(--ease-out);
+    position:relative; overflow:hidden;
+  }
+  .badge:hover {
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-pop), var(--shadow-inset);
+    background:var(--ink-3);
+  }
+  .badge .seal {
+    width:60px; height:60px; margin:0 auto 14px;
+    border-radius:50%;
+    background:linear-gradient(135deg, rgba(45,212,208,.15), rgba(168,224,99,.05));
+    border:1px solid rgba(45,212,208,.3);
+    display:grid; place-items:center;
+    color:var(--brand-cyan);
+  }
+  .badge .n {
+    font-family:var(--font-display); font-size:22px;
+    text-transform:uppercase; color:#fff; line-height:1;
+    letter-spacing:.04em;
+  }
+  .badge .s { font-size:11.5px; color:var(--ink-7); margin-top:8px; }
+
+  /* ============= Status bar ============= */
+  .status-card {
+    margin-top:40px;
+    background:linear-gradient(135deg, rgba(93,211,158,.06) 0%, var(--ink-2) 100%);
+    border:1px solid rgba(93,211,158,.25);
+    border-radius:14px;
+    padding:20px 24px;
+    display:flex; align-items:center; gap:16px;
+    flex-wrap:wrap;
+  }
+  .status-card .pulse-ring {
+    position:relative;
+    width:10px; height:10px; border-radius:50%; background:var(--success);
+    box-shadow:0 0 12px var(--success);
+  }
+  .status-card .pulse-ring::before {
+    content:""; position:absolute; inset:0; border-radius:50%; background:var(--success);
+    animation:pulse 2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { transform:scale(1); opacity:.6; }
+    100% { transform:scale(4); opacity:0; }
+  }
+  .status-card .msg { font-size:14.5px; color:#fff; font-weight:500; }
+  .status-card .meta { font-size:12.5px; color:var(--ink-8); }
+  .status-card a { margin-left:auto; font-size:13px; color:var(--brand-cyan); font-weight:600; }
+
+  /* ============= Pillars ============= */
+  .pillars {
+    padding:140px 0; border-top:1px solid var(--line-soft);
+  }
+  .pillars-grid {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
+    background:var(--line-soft);
+    border:1px solid var(--line-soft);
+    border-radius:18px; overflow:hidden;
+  }
+  @media (max-width:800px){ .pillars-grid { grid-template-columns:1fr; } }
+  .pillar-card {
+    background:var(--ink-1);
+    padding:40px;
+    transition:background .25s var(--ease-out);
+    position:relative;
+  }
+  .pillar-card:hover { background:var(--ink-2); }
+  .pillar-card .ico {
+    width:48px; height:48px; border-radius:12px;
+    background:rgba(45,212,208,.10); color:var(--brand-cyan);
+    border:1px solid rgba(45,212,208,.22);
+    display:grid; place-items:center;
+    margin-bottom:24px;
+  }
+  .pillar-card h3 {
+    font-family:var(--font-display); font-size:36px;
+    text-transform:uppercase; color:#fff;
+    line-height:1; margin:0 0 16px;
+  }
+  .pillar-card p { color:var(--ink-9); font-size:15px; line-height:1.6; margin:0 0 20px; max-width:48ch; }
+  .pillar-card ul {
+    list-style:none; padding:0; margin:0;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .pillar-card ul li {
+    display:flex; align-items:flex-start; gap:10px;
+    font-size:13.5px; color:var(--ink-9); line-height:1.5;
+  }
+  .pillar-card ul li svg { color:var(--brand-cyan); flex:none; margin-top:3px; }
+  .pillar-card ul li .hl { color:#fff; font-weight:600; }
+
+  /* ============= Architecture diagram ============= */
+  .architecture {
+    padding:140px 0; border-top:1px solid var(--line-soft);
+  }
+  .arch-grid {
+    display:grid; grid-template-columns:1fr 1.2fr; gap:80px; align-items:center;
+  }
+  @media (max-width:1000px){ .arch-grid { grid-template-columns:1fr; } }
+  .arch-diagram {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:20px; padding:36px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    position:relative; overflow:hidden;
+    aspect-ratio:1/1; max-height:560px;
+  }
+  .arch-diagram::before {
+    content:""; position:absolute;
+    inset:36px; border-radius:14px;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,.05) 1px, transparent 0) 0 0/24px 24px;
+    pointer-events:none;
+  }
+  .arch-layer {
+    position:relative; z-index:1;
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    border-radius:12px;
+    padding:14px 18px;
+    margin-bottom:14px;
+    display:flex; align-items:center; gap:12px;
+    box-shadow:var(--shadow-inset);
+  }
+  .arch-layer:last-child { margin-bottom:0; }
+  .arch-layer .ico {
+    width:32px; height:32px; border-radius:8px;
+    background:rgba(45,212,208,.10); color:var(--brand-cyan);
+    border:1px solid rgba(45,212,208,.22);
+    display:grid; place-items:center; flex:none;
+  }
+  .arch-layer .label {
+    font-size:10.5px; text-transform:uppercase; letter-spacing:.14em;
+    color:var(--ink-7); font-weight:700;
+  }
+  .arch-layer .name { font-size:14px; color:#fff; font-weight:600; margin-top:2px; }
+  .arch-layer .meta { margin-left:auto; font-family:var(--font-mono); font-size:11px; color:var(--brand-cyan); }
+  .arch-layer.featured {
+    border-color:rgba(45,212,208,.4);
+    box-shadow:0 0 24px rgba(45,212,208,.15), var(--shadow-inset);
+  }
+
+  /* ============= Sub-processors / data residency ============= */
+  .residency { padding:120px 0; border-top:1px solid var(--line-soft); }
+  .residency-grid {
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;
+  }
+  @media (max-width:900px){ .residency-grid { grid-template-columns:1fr; } }
+  .region {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:18px; padding:32px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+    transition:all .25s var(--ease-out);
+  }
+  .region:hover {
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-pop), var(--shadow-inset);
+  }
+  .region .flag {
+    width:48px; height:48px; border-radius:12px;
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    display:grid; place-items:center;
+    font-family:var(--font-display); font-size:18px;
+    color:var(--brand-cyan); letter-spacing:.04em;
+    margin-bottom:20px;
+  }
+  .region h4 {
+    font-family:var(--font-display); font-size:32px;
+    text-transform:uppercase; color:#fff; line-height:1;
+    margin:0 0 12px;
+  }
+  .region .loc { font-size:12.5px; color:var(--ink-7); margin-bottom:18px; text-transform:uppercase; letter-spacing:.14em; font-weight:600; }
+  .region p { color:var(--ink-9); font-size:14px; line-height:1.55; margin:0; }
+
+  /* ============= Disclosure / bug bounty ============= */
+  .disclosure {
+    padding:120px 0; border-top:1px solid var(--line-soft);
+  }
+  .disclosure-grid {
+    display:grid; grid-template-columns:1.2fr 1fr; gap:64px; align-items:center;
+  }
+  @media (max-width:900px){ .disclosure-grid { grid-template-columns:1fr; } }
+  .disclosure h2 { margin:0; }
+  .disclosure-body p { color:var(--ink-9); font-size:16px; line-height:1.6; max-width:54ch; margin:24px 0; }
+  .disclosure-body .stats {
+    display:flex; gap:48px; margin-top:32px;
+    padding:32px 0; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+  }
+  .disclosure-body .stats .s .v {
+    font-family:var(--font-display); font-size:48px; line-height:1; color:#fff;
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .disclosure-body .stats .s .l {
+    font-size:11.5px; color:var(--ink-7); text-transform:uppercase; letter-spacing:.14em; font-weight:600;
+    margin-top:8px;
+  }
+
+  .scope-card {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:18px; padding:32px;
+    box-shadow:var(--shadow-md), var(--shadow-inset);
+  }
+  .scope-card h4 {
+    font-family:var(--font-display); font-size:24px;
+    text-transform:uppercase; color:#fff; margin:0 0 18px;
+  }
+  .scope-card .row {
+    padding:12px 0; border-bottom:1px solid var(--line-soft);
+    display:flex; align-items:center; gap:14px;
+  }
+  .scope-card .row:last-child { border-bottom:none; }
+  .scope-card .row .sev {
+    font-family:var(--font-mono); font-size:10.5px; font-weight:700;
+    padding:3px 8px; border-radius:6px; text-transform:uppercase;
+    letter-spacing:.1em;
+    flex:none;
+  }
+  .scope-card .row .sev.crit { background:rgba(242,109,109,.15); color:var(--danger); }
+  .scope-card .row .sev.high { background:rgba(244,183,64,.15); color:var(--warning); }
+  .scope-card .row .sev.med { background:rgba(47,182,232,.15); color:var(--brand-blue); }
+  .scope-card .row .sev.low { background:rgba(124,124,133,.15); color:var(--ink-8); }
+  .scope-card .row .desc { font-size:13.5px; color:var(--ink-9); flex:1; }
+  .scope-card .row .pay {
+    font-family:var(--font-display); font-size:20px; color:#fff;
+    background:var(--brand-gradient-wide);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* ============= Resource list ============= */
+  .resources { padding:100px 0; border-top:1px solid var(--line-soft); }
+  .resources-head { margin-bottom:48px; }
+  .resources-list {
+    display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  }
+  @media (max-width:700px){ .resources-list { grid-template-columns:1fr; } }
+  .resource {
+    background:var(--ink-2); border:1px solid var(--line-soft);
+    border-radius:12px; padding:20px 24px;
+    display:flex; align-items:center; gap:16px;
+    transition:all .2s var(--ease-out);
+  }
+  .resource:hover {
+    background:var(--ink-3); border-color:var(--line-strong);
+    transform:translateX(2px);
+  }
+  .resource .ico {
+    width:36px; height:36px; border-radius:8px;
+    background:var(--ink-1); border:1px solid var(--line-soft);
+    color:var(--brand-cyan);
+    display:grid; place-items:center; flex:none;
+  }
+  .resource .t { font-size:14.5px; font-weight:600; color:#fff; }
+  .resource .s { font-size:12.5px; color:var(--ink-7); margin-top:2px; }
+  .resource .arrow { margin-left:auto; color:var(--brand-cyan); transition:transform .2s var(--ease-out); }
+  .resource:hover .arrow { transform:translateX(4px); }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><img src="assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a href="platform.html">Platform</a>
+      <a href="customers.html">Customers</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="demo.html">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ============= HERO ============= -->
+<section class="s-hero">
+  <div class="glow-tl"></div>
+  <div class="container">
+    <div class="eyebrow with-rule reveal">Security &amp; trust</div>
+    <h1 class="h1 reveal" style="margin-top:18px">Your pipeline,<br><span class="gradient-text">defended.</span></h1>
+    <p class="lead reveal">SOC 2 Type II. GDPR. HIPAA-eligible. SAML SSO. Encryption everywhere. A 24/7 on-call rotation staffed by engineers, not a script. And a bug bounty paying out within the week.</p>
+
+    <div class="badges reveal">
+      <div class="badge">
+        <div class="seal"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+        <div class="n">SOC 2</div>
+        <div class="s">Type II · 2026</div>
+      </div>
+      <div class="badge">
+        <div class="seal"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10z"/></svg></div>
+        <div class="n">GDPR</div>
+        <div class="s">EU SCCs · DPA</div>
+      </div>
+      <div class="badge">
+        <div class="seal"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <div class="n">HIPAA</div>
+        <div class="s">BAA · Scale plan</div>
+      </div>
+      <div class="badge">
+        <div class="seal"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="n">PCI DSS</div>
+        <div class="s">SAQ-A · Stripe</div>
+      </div>
+      <div class="badge">
+        <div class="seal"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="n">CCPA</div>
+        <div class="s">California ready</div>
+      </div>
+    </div>
+
+    <div class="status-card reveal">
+      <span class="pulse-ring"></span>
+      <span class="msg">All systems operational</span>
+      <span class="meta">99.99% uptime in 2025 · 14 minutes since last deploy</span>
+      <a href="#status">View status page →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============= PILLARS ============= -->
+<section class="pillars">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow with-rule">How we protect your data</div>
+      <h2 class="h2" style="margin-top:18px">Four pillars.<br>One platform.</h2>
+    </div>
+
+    <div class="pillars-grid">
+
+      <div class="pillar-card reveal">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <h3>Encryption</h3>
+        <p>Every byte encrypted at rest and in transit. Customer-managed keys on Scale plans.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">AES-256</span> at rest, every database, every backup, every blob.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">TLS 1.3</span> in transit, HSTS preloaded, modern ciphers only.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">AWS KMS</span> envelope encryption — per-tenant data keys, master keys rotated annually.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Field-level encryption on PII for healthcare and financial-services workspaces.</span></li>
+        </ul>
+      </div>
+
+      <div class="pillar-card reveal">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Identity &amp; access</h3>
+        <p>SSO, SCIM provisioning, granular roles, audit trail. Every action your team takes is logged.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">SAML 2.0 SSO</span> with Okta, Azure AD, Google, OneLogin, Ping, ADFS.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">SCIM 2.0</span> auto-provisioning with group-based role mapping.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>RBAC with 6 default roles, unlimited custom roles.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Immutable <span class="hl">audit log</span> — 90 days Growth, 2 years Scale, exportable to your SIEM.</span></li>
+        </ul>
+      </div>
+
+      <div class="pillar-card reveal">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <h3>Resilience &amp; recovery</h3>
+        <p>Multi-region replication, point-in-time restore, drilled DR plans, on-call engineers 24/7.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">99.99% uptime SLA</span> on Scale, signed, with monthly credits if we miss.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Multi-region active-active across 3 AWS AZs per region.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">PITR</span> with 35-day window, RPO &lt; 1 minute, RTO &lt; 15 minutes.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>DR plans tested quarterly. The drill reports are available under NDA.</span></li>
+        </ul>
+      </div>
+
+      <div class="pillar-card reveal">
+        <div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Compliance &amp; programs</h3>
+        <p>Independent audits, structured vendor program, public sub-processor list, transparency reports.</p>
+        <ul>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span><span class="hl">SOC 2 Type II</span> — audited annually, report under NDA.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>GDPR · CCPA · LGPD ready. DPA pre-signed at order form.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>HIPAA-eligible workloads on Scale with a signed BAA.</span></li>
+          <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Bug bounty active on HackerOne, payouts up to <span class="hl">$25,000</span>.</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============= ARCHITECTURE ============= -->
+<section class="architecture">
+  <div class="container">
+    <div class="arch-grid">
+      <div class="reveal">
+        <div class="eyebrow with-rule" style="margin-bottom:18px">Defense in depth</div>
+        <h2 class="h2">Six layers,<br>each <span class="gradient-text">independent</span>.</h2>
+        <p style="color:var(--ink-8); margin-top:28px; font-size:16px; line-height:1.6; max-width:48ch;">No single layer protects your data. A request from your browser passes through six independent control points — each operated by a different system, each logged, each tested. A breach of one doesn't compromise the others.</p>
+        <p style="color:var(--ink-9); margin-top:18px; font-size:14.5px; line-height:1.6; max-width:48ch;">We publish the whitepaper on this architecture, with threat models and red-team findings, on request. Email <a href="#" style="color:var(--brand-cyan)">security@clientlink.io</a>.</p>
+      </div>
+
+      <div class="arch-diagram reveal">
+        <div class="arch-layer">
+          <span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg></span>
+          <div><div class="label">L1 · Edge</div><div class="name">Cloudflare WAF + DDoS</div></div>
+          <span class="meta">cf-edge</span>
+        </div>
+        <div class="arch-layer">
+          <span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <div><div class="label">L2 · Auth</div><div class="name">SAML SSO + token rotation</div></div>
+          <span class="meta">auth-svc</span>
+        </div>
+        <div class="arch-layer featured">
+          <span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+          <div><div class="label">L3 · RBAC</div><div class="name">Policy engine + audit log</div></div>
+          <span class="meta">rbac/opa</span>
+        </div>
+        <div class="arch-layer">
+          <span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+          <div><div class="label">L4 · App</div><div class="name">Tenant-isolated runtimes</div></div>
+          <span class="meta">k8s/iso</span>
+        </div>
+        <div class="arch-layer featured">
+          <span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6"/><path d="m5.05 4.95 4.24 4.24M14.71 14.71l4.24 4.24"/></svg></span>
+          <div><div class="label">L5 · Crypto</div><div class="name">AWS KMS envelope encryption</div></div>
+          <span class="meta">kms-east-1</span>
+        </div>
+        <div class="arch-layer">
+          <span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
+          <div><div class="label">L6 · Storage</div><div class="name">Encrypted DB + cold backups</div></div>
+          <span class="meta">aurora/s3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= DATA RESIDENCY ============= -->
+<section class="residency">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow with-rule">Data residency</div>
+      <h2 class="h2" style="margin-top:18px">Choose where your data lives.</h2>
+    </div>
+
+    <div class="residency-grid">
+      <div class="region reveal">
+        <div class="flag">US</div>
+        <h4>United States</h4>
+        <div class="loc">us-east-1 · us-west-2</div>
+        <p>Default for North American customers. AWS Virginia and Oregon, active-active across three AZs each. CCPA-ready.</p>
+      </div>
+      <div class="region reveal">
+        <div class="flag">EU</div>
+        <h4>European Union</h4>
+        <div class="loc">eu-central-1 · eu-west-1</div>
+        <p>AWS Frankfurt and Ireland. Data and metadata stay in-region. SCCs in place. Default for EU/UK customers on Growth+.</p>
+      </div>
+      <div class="region reveal">
+        <div class="flag">AU</div>
+        <h4>Australia</h4>
+        <div class="loc">ap-southeast-2</div>
+        <p>AWS Sydney. Required for some APAC public-sector customers and available on Scale by default.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= BUG BOUNTY ============= -->
+<section class="disclosure">
+  <div class="container">
+    <div class="disclosure-grid">
+      <div class="disclosure-body reveal">
+        <div class="eyebrow with-rule" style="margin-bottom:18px">Responsible disclosure</div>
+        <h2 class="h2">Find a bug.<br><span class="gradient-text">Get paid.</span></h2>
+        <p>Our bug bounty has been live on HackerOne since 2022. We triage every report within 24 hours, fix critical findings within 72, and pay out within a week of validation. We don't threaten researchers, we don't gag them, and we publicly thank everyone whose report led to a fix.</p>
+        <p>Report bugs at <a href="#" style="color:var(--brand-cyan)">hackerone.com/clientlink</a> or, if you'd rather skip the platform, directly to <a href="#" style="color:var(--brand-cyan)">security@clientlink.io</a> using our <a href="#" style="color:var(--brand-cyan)">PGP key</a>.</p>
+        <div class="stats">
+          <div class="s"><div class="v">214</div><div class="l">Reports validated</div></div>
+          <div class="s"><div class="v">$485K</div><div class="l">Paid out since 2022</div></div>
+          <div class="s"><div class="v">72h</div><div class="l">Median time to fix (critical)</div></div>
+        </div>
+      </div>
+      <div class="scope-card reveal">
+        <h4>Bounty rates</h4>
+        <div class="row"><span class="sev crit">Crit</span><span class="desc">RCE, auth bypass, tenant isolation breach</span><span class="pay">$25,000</span></div>
+        <div class="row"><span class="sev high">High</span><span class="desc">Privilege escalation, sensitive data exposure</span><span class="pay">$8,500</span></div>
+        <div class="row"><span class="sev med">Med</span><span class="desc">CSRF, stored XSS, IDOR (single tenant)</span><span class="pay">$2,500</span></div>
+        <div class="row"><span class="sev low">Low</span><span class="desc">Reflected XSS, info leak, rate-limit bypass</span><span class="pay">$500</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============= RESOURCES ============= -->
+<section class="resources">
+  <div class="container">
+    <div class="section-head resources-head reveal">
+      <div class="eyebrow with-rule">For your security review</div>
+      <h2 class="h2" style="margin-top:18px">Everything we can share.</h2>
+    </div>
+
+    <div class="resources-list">
+      <a class="resource reveal" href="#">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+        <div><div class="t">SOC 2 Type II report (2026)</div><div class="s">PDF · Under NDA · Available on request</div></div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="resource reveal" href="#">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+        <div><div class="t">Data Processing Addendum</div><div class="s">PDF · Pre-signed · Auto-attaches to order forms</div></div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="resource reveal" href="#">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+        <div><div class="t">Business Associate Agreement (HIPAA)</div><div class="s">PDF · Scale plan customers · 5 business days to sign</div></div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="resource reveal" href="#">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+        <div><div class="t">Pen-test summary (Q1 2026)</div><div class="s">Latitio Security · Findings remediated</div></div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="resource reveal" href="#">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <div><div class="t">Sub-processor list</div><div class="s">Live page · 30-day notice on changes</div></div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="resource reveal" href="#">
+        <span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+        <div><div class="t">Security questionnaire (CAIQ Lite)</div><div class="s">XLSX · Pre-filled · Updated quarterly</div></div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============= FINAL CTA ============= -->
+<section class="final-cta">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner reveal">
+      <div class="eyebrow with-rule" style="justify-content:center; margin-bottom:24px">Security questions?</div>
+      <h2 class="h2">Talk to our<br><span class="gradient-text">security team.</span></h2>
+      <p class="lead">We pre-fill security questionnaires, hop on calls with your CISO, and sign just about anything reasonable. Most reviews wrap in a week.</p>
+      <div class="row">
+        <a class="btn btn-primary btn-lg" href="demo.html">Book a security review<span class="btn-arrow">→</span></a>
+        <a class="btn btn-ghost btn-lg" href="#">Email security@clientlink.io</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div><h5>Platform</h5><ul><li><a href="platform.html">Overview</a></li><li><a href="platform.html#crm">CRM</a></li><li><a href="platform.html#funnels">Funnels</a></li><li><a href="platform.html#email">Email &amp; SMS</a></li><li><a href="platform.html#booking">Booking</a></li><li><a href="platform.html#automations">Automations</a></li></ul></div>
+      <div><h5>Solutions</h5><ul><li><a href="#">Agencies</a></li><li><a href="#">Coaches</a></li><li><a href="#">Local services</a></li><li><a href="#">SaaS</a></li></ul></div>
+      <div><h5>Resources</h5><ul><li><a href="changelog.html">Changelog</a></li><li><a href="#">Templates</a></li><li><a href="#">Help center</a></li><li><a href="#">API docs</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="about.html">About</a></li><li><a href="customers.html">Customers</a></li><li><a href="#">Careers</a></li><li><a href="demo.html">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="security.html">Security</a><a href="#">Status</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/scripts.js"></script>
+</body>
+</html>
