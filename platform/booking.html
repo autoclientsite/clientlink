@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking — Clientlink</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .p-hero { padding:180px 0 100px; position:relative; overflow:hidden; }
+    .p-hero h1 { max-width:16ch; margin:18px 0 0; }
+    .p-hero .lead { margin-top:24px; }
+    .p-hero .ctas { display:flex; gap:14px; margin-top:40px; flex-wrap:wrap; }
+
+    .feat-section { padding:140px 0; border-top:1px solid var(--line-soft); }
+    .feat-inner { display:grid; grid-template-columns:1fr 1.1fr; gap:80px; align-items:center; }
+    .feat-inner.flip { grid-template-columns:1.1fr 1fr; }
+    @media (max-width:1000px) { .feat-inner, .feat-inner.flip { grid-template-columns:1fr; gap:40px; } }
+    .feat-copy .eyebrow { margin-bottom:24px; }
+    .feat-copy h2 { margin:0 0 24px; max-width:16ch; }
+    .feat-copy .lead { margin-bottom:32px; }
+    .feat-copy ul { list-style:none; padding:0; margin:0 0 36px; display:flex; flex-direction:column; gap:12px; }
+    .feat-copy ul li { display:flex; align-items:flex-start; gap:12px; font-size:15px; color:var(--ink-9); }
+    .feat-copy ul li svg { color:var(--brand-cyan); flex:none; margin-top:4px; }
+    .replaces-line { margin-top:20px; font-size:12.5px; color:var(--ink-7); display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+    .replaces-line .lbl { text-transform:uppercase; letter-spacing:.14em; font-weight:700; color:var(--brand-cyan); font-size:11px; }
+    .replaces-line .chip { padding:3px 9px; border:1px solid var(--line-strong); border-radius:999px; color:var(--ink-8); text-decoration:line-through; text-decoration-color:rgba(255,255,255,.3); }
+
+    .mock { border:1px solid var(--line-soft); border-radius:18px; background:var(--ink-2); box-shadow:0 24px 48px -12px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06); overflow:hidden; position:relative; aspect-ratio:4/3; }
+    .mock::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.04) 0%, transparent 30%, transparent 80%, rgba(0,0,0,.25) 100%); }
+    .mock-bar { height:32px; display:flex; align-items:center; padding:0 12px; gap:6px; border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg, var(--ink-3) 0%, var(--ink-2) 100%); }
+    .mock-bar .d { width:9px; height:9px; border-radius:50%; }
+    .mock-bar .r { background:#ff5f57; } .mock-bar .y { background:#febc2e; } .mock-bar .g { background:#28c840; }
+    .mock-bar .ttl { margin:0 auto; font-family:monospace; font-size:10.5px; color:var(--ink-7); background:var(--ink-1); border:1px solid var(--line-soft); border-radius:6px; padding:3px 10px; }
+    .mock-body { padding:18px 20px; position:relative; height:calc(100% - 32px); }
+
+    .mc-bk { display:grid; grid-template-columns:1.2fr 1fr; gap:10px; height:100%; }
+    .mc-bk .cal { background:var(--ink-1); border:1px solid var(--line-soft); border-radius:8px; padding:12px; }
+    .mc-bk .cal .mh { display:flex; align-items:center; margin-bottom:10px; }
+    .mc-bk .cal .mh .mt { font-size:11px; font-weight:700; color:#fff; }
+    .mc-bk .cal .mh .nav { margin-left:auto; display:flex; gap:5px; }
+    .mc-bk .cal .mh .nav span { width:18px; height:18px; border-radius:5px; background:var(--ink-2); border:1px solid var(--line-soft); display:grid; place-items:center; color:var(--ink-7); font-size:9px; cursor:pointer; }
+    .mc-bk .grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+    .mc-bk .dh { font-size:8.5px; color:var(--ink-7); text-align:center; padding:3px 0; font-weight:600; }
+    .mc-bk .day { aspect-ratio:1; border-radius:5px; display:grid; place-items:center; font-size:9.5px; color:var(--ink-9); border:1px solid transparent; }
+    .mc-bk .day.muted { color:var(--ink-6); }
+    .mc-bk .day.has { background:var(--ink-2); border-color:var(--line-soft); }
+    .mc-bk .day.today { background:rgba(45,212,208,.12); border-color:rgba(45,212,208,.45); color:#fff; font-weight:700; }
+    .mc-bk .day.dot::after { content:""; width:3px; height:3px; border-radius:50%; background:var(--brand-lime); margin-top:1px; }
+    .mc-bk .slots { background:var(--ink-1); border:1px solid var(--line-soft); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:5px; overflow:hidden; }
+    .mc-bk .slots .sh { font-size:10.5px; font-weight:700; color:#fff; margin-bottom:6px; }
+    .mc-bk .slots .ss { font-size:9.5px; color:var(--ink-7); margin-bottom:8px; }
+    .mc-bk .slots .sl { padding:6px 9px; border-radius:6px; background:var(--ink-2); border:1px solid var(--line-soft); font-size:10px; color:#fff; }
+    .mc-bk .slots .sl.sel { background:var(--brand-gradient); color:#0B1A1A; font-weight:700; border-color:transparent; }
+
+    .feat-cards { padding:120px 0; border-top:1px solid var(--line-soft); }
+    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:64px; }
+    @media (max-width:900px) { .cards-grid { grid-template-columns:1fr 1fr; } }
+    @media (max-width:600px) { .cards-grid { grid-template-columns:1fr; } }
+    .f-card { background:var(--ink-2); border:1px solid var(--line-soft); border-radius:18px; padding:28px; box-shadow:var(--shadow-md), var(--shadow-inset); transition:all .25s var(--ease-out); }
+    .f-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-pop), var(--shadow-inset); background:var(--ink-3); }
+    .f-card .ico { width:44px; height:44px; border-radius:12px; background:rgba(45,212,208,.10); border:1px solid rgba(45,212,208,.22); color:var(--brand-cyan); display:grid; place-items:center; margin-bottom:20px; }
+    .f-card h4 { font-family:var(--font-display); font-size:28px; text-transform:uppercase; margin:0 0 10px; color:#fff; line-height:1; }
+    .f-card p { color:var(--ink-8); font-size:14.5px; margin:0; line-height:1.5; }
+
+    .next-strip { padding:48px 0; border-top:1px solid rgba(255,255,255,.08); }
+    .next-strip .inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .next-strip .lbl { font-size:12px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-7); font-weight:600; margin-right:8px; }
+    .next-strip a { padding:8px 18px; border-radius:999px; border:1px solid var(--line-soft); font-size:13px; color:var(--ink-9); background:var(--ink-2); transition:all .15s; }
+    .next-strip a:hover { border-color:var(--line-strong); color:#fff; background:var(--ink-3); }
+    .next-strip a.current { background:var(--brand-gradient); color:#0B1A1A; font-weight:700; border-color:transparent; }
+  </style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark"><img src="../assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a class="active" href="../platform">Platform</a>
+      <a href="../customers">Customers</a>
+      <a href="../about">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="../demo">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ======================== HERO ======================== -->
+<section class="p-hero">
+  <div class="glow-tl"></div>
+  <div class="container">
+    <span class="eyebrow with-rule reveal">Platform / Booking</span>
+    <h1 class="h1 reveal">Calendars that <span class="gradient-text">protect your team.</span></h1>
+    <p class="lead reveal">Round-robin, group, collective, and one-off meetings — branded, embedded, and synced to every calendar your team already uses. Reminders go out by SMS and email automatically.</p>
+    <div class="ctas reveal">
+      <a class="btn btn-primary btn-lg" href="../demo">Book a demo <span class="btn-arrow">→</span></a>
+      <a class="btn btn-ghost btn-lg" href="../platform">See platform overview</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FEATURE DETAIL ======================== -->
+<section class="feat-section">
+  <div class="container">
+    <div class="feat-inner flip">
+      <!-- Mock (first in DOM = left column with flip) -->
+      <div class="mock reveal">
+        <div class="mock-bar">
+          <span class="d r"></span><span class="d y"></span><span class="d g"></span>
+          <span class="ttl">app.clientlink.io · booking / 30-min demo</span>
+        </div>
+        <div class="mock-body">
+          <div class="mc-bk">
+            <!-- Calendar -->
+            <div class="cal">
+              <div class="mh">
+                <span class="mt">May 2026</span>
+                <div class="nav">
+                  <span>‹</span>
+                  <span>›</span>
+                </div>
+              </div>
+              <div class="grid">
+                <div class="dh">Su</div>
+                <div class="dh">Mo</div>
+                <div class="dh">Tu</div>
+                <div class="dh">We</div>
+                <div class="dh">Th</div>
+                <div class="dh">Fr</div>
+                <div class="dh">Sa</div>
+                <!-- Week 1 -->
+                <div class="day muted">27</div>
+                <div class="day muted">28</div>
+                <div class="day muted">29</div>
+                <div class="day muted">30</div>
+                <div class="day has">1</div>
+                <div class="day has">2</div>
+                <div class="day">3</div>
+                <!-- Week 2 -->
+                <div class="day">4</div>
+                <div class="day has">5</div>
+                <div class="day has">6</div>
+                <div class="day dot has">7</div>
+                <div class="day has">8</div>
+                <div class="day has">9</div>
+                <div class="day">10</div>
+                <!-- Week 3 -->
+                <div class="day">11</div>
+                <div class="day has">12</div>
+                <div class="day dot has">13</div>
+                <div class="day has">14</div>
+                <div class="day today dot has">15</div>
+                <div class="day dot has">16</div>
+                <div class="day">17</div>
+                <!-- Week 4 -->
+                <div class="day">18</div>
+                <div class="day has">19</div>
+                <div class="day dot has">20</div>
+                <div class="day has">21</div>
+                <div class="day dot has">22</div>
+                <div class="day has">23</div>
+                <div class="day">24</div>
+                <!-- Week 5 -->
+                <div class="day">25</div>
+                <div class="day has">26</div>
+                <div class="day has">27</div>
+                <div class="day has">28</div>
+                <div class="day has">29</div>
+                <div class="day has">30</div>
+                <div class="day">31</div>
+              </div>
+            </div>
+            <!-- Slots -->
+            <div class="slots">
+              <div class="sh">Thu, May 15</div>
+              <div class="ss">30-min demo · with Erin</div>
+              <div class="sl">9:00 AM</div>
+              <div class="sl">10:30 AM</div>
+              <div class="sl sel">2:00 PM</div>
+              <div class="sl">3:30 PM</div>
+              <div class="sl">4:00 PM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy (second in DOM = right column with flip) -->
+      <div class="feat-copy reveal">
+        <span class="eyebrow with-rule">04 / Booking</span>
+        <h2 class="h2">Every meeting booked. Every no-show chased.</h2>
+        <p class="lead">Round-robin, group, collective, and one-off meetings — branded, embedded, and synced to every calendar your team already uses. Reminders go out by SMS and email automatically.</p>
+        <ul>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Round-robin, collective, group, and one-off bookings
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Auto-routing by territory, plan size, or AI score
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Branded booking pages on your domain
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            SMS + email reminders, no-show recovery flows
+          </li>
+        </ul>
+        <div class="replaces-line">
+          <span class="lbl">Replaces</span>
+          <span class="chip">Calendly</span>
+          <span class="chip">Chili Piper</span>
+          <span class="chip">SavvyCal</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FEATURE CARDS ======================== -->
+<section class="feat-cards">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow with-rule">Features</span>
+      <h2 class="h2" style="margin-top:16px;">Scheduling that sells.</h2>
+    </div>
+    <div class="cards-grid">
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="7" cy="10" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="13" cy="10" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M10 10h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Round-robin routing</h4>
+        <p>Distribute meetings evenly across your team. Set rules by territory, deal size, or availability.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M2 7h16" stroke="currentColor" stroke-width="1.7"/><path d="M6 2v2M14 2v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Branded pages</h4>
+        <p>Custom booking pages on your domain. Embed them in funnels, emails, or anywhere with a snippet.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 3h9a2 2 0 012 2v8a2 2 0 01-2 2H7l-4 3V5a2 2 0 012-2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Auto-reminders</h4>
+        <p>SMS and email reminders at 24h, 1h, and 15 minutes. No-show recovery flow kicks in automatically.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2z" stroke="currentColor" stroke-width="1.7"/><path d="M10 6v4l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Calendar sync</h4>
+        <p>Google Calendar, Outlook, and iCal. Buffer times, daily limits, and availability rules — all respected.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="6" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="14" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M2 17c0-2.761 1.79-4 4-4h8c2.21 0 4 1.239 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Group &amp; collective</h4>
+        <p>One link for the whole team. Collective scheduling finds a time everyone is free at once.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 5h12M4 9h8M4 13h10M4 17h6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Intake forms</h4>
+        <p>Collect context before the meeting. Answers flow straight into the CRM contact record.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================== NEXT STRIP ======================== -->
+<section class="next-strip">
+  <div class="container">
+    <div class="inner">
+      <span class="lbl">Platform</span>
+      <a href="../platform">Overview</a>
+      <a href="crm">CRM</a>
+      <a href="funnels">Funnels</a>
+      <a href="email">Email &amp; SMS</a>
+      <a class="current" href="booking">Booking</a>
+      <a href="automations">Automations</a>
+      <a href="reputation">Reputation</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FINAL CTA ======================== -->
+<section class="final-cta">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner">
+      <div class="row">
+        <div>
+          <span class="eyebrow with-rule reveal">Get started</span>
+          <h2 class="h2 reveal">Fill your calendar. Automatically.</h2>
+          <p class="lead reveal">We'll show you the full booking flow live, including the no-show recovery sequence.</p>
+          <div class="ctas reveal" style="display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;">
+            <a class="btn btn-primary btn-lg" href="../demo">Book a demo <span class="btn-arrow">→</span></a>
+            <a class="btn btn-ghost btn-lg" href="../platform">See platform overview</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="../assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div><h5>Platform</h5><ul><li><a href="../platform">Overview</a></li><li><a href="../platform/crm">CRM</a></li><li><a href="../platform/funnels">Funnels</a></li><li><a href="../platform/email">Email &amp; SMS</a></li><li><a href="../platform/booking">Booking</a></li><li><a href="../platform/automations">Automations</a></li><li><a href="../platform/reputation">Reputation</a></li></ul></div>
+      <div><h5>Solutions</h5><ul><li><a href="#">Agencies</a></li><li><a href="#">Coaches</a></li><li><a href="#">Local services</a></li><li><a href="#">SaaS</a></li></ul></div>
+      <div><h5>Resources</h5><ul><li><a href="#">Templates</a></li><li><a href="#">Help center</a></li><li><a href="#">API docs</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="../about">About</a></li><li><a href="../customers">Customers</a></li><li><a href="#">Careers</a></li><li><a href="../demo">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links"><a href="../privacy">Privacy</a><a href="../terms">Terms</a><a href="../security">Security</a><a href="#">Status</a></div>
+    </div>
+  </div>
+</footer>
+<script src="../assets/scripts.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email &amp; SMS — Clientlink</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .p-hero { padding:180px 0 100px; position:relative; overflow:hidden; }
+    .p-hero h1 { max-width:16ch; margin:18px 0 0; }
+    .p-hero .lead { margin-top:24px; }
+    .p-hero .ctas { display:flex; gap:14px; margin-top:40px; flex-wrap:wrap; }
+
+    .feat-section { padding:140px 0; border-top:1px solid var(--line-soft); }
+    .feat-inner { display:grid; grid-template-columns:1fr 1.1fr; gap:80px; align-items:center; }
+    @media (max-width:1000px) { .feat-inner { grid-template-columns:1fr; gap:40px; } }
+    .feat-copy .eyebrow { margin-bottom:24px; }
+    .feat-copy h2 { margin:0 0 24px; max-width:16ch; }
+    .feat-copy .lead { margin-bottom:32px; }
+    .feat-copy ul { list-style:none; padding:0; margin:0 0 36px; display:flex; flex-direction:column; gap:12px; }
+    .feat-copy ul li { display:flex; align-items:flex-start; gap:12px; font-size:15px; color:var(--ink-9); }
+    .feat-copy ul li svg { color:var(--brand-cyan); flex:none; margin-top:4px; }
+    .replaces-line { margin-top:20px; font-size:12.5px; color:var(--ink-7); display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+    .replaces-line .lbl { text-transform:uppercase; letter-spacing:.14em; font-weight:700; color:var(--brand-cyan); font-size:11px; }
+    .replaces-line .chip { padding:3px 9px; border:1px solid var(--line-strong); border-radius:999px; color:var(--ink-8); text-decoration:line-through; text-decoration-color:rgba(255,255,255,.3); }
+
+    .mock { border:1px solid var(--line-soft); border-radius:18px; background:var(--ink-2); box-shadow:0 24px 48px -12px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06); overflow:hidden; position:relative; aspect-ratio:4/3; }
+    .mock::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.04) 0%, transparent 30%, transparent 80%, rgba(0,0,0,.25) 100%); }
+    .mock-bar { height:32px; display:flex; align-items:center; padding:0 12px; gap:6px; border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg, var(--ink-3) 0%, var(--ink-2) 100%); }
+    .mock-bar .d { width:9px; height:9px; border-radius:50%; }
+    .mock-bar .r { background:#ff5f57; } .mock-bar .y { background:#febc2e; } .mock-bar .g { background:#28c840; }
+    .mock-bar .ttl { margin:0 auto; font-family:monospace; font-size:10.5px; color:var(--ink-7); background:var(--ink-1); border:1px solid var(--line-soft); border-radius:6px; padding:3px 10px; }
+    .mock-body { padding:18px 20px; position:relative; height:calc(100% - 32px); }
+
+    .mc-mail { display:grid; grid-template-columns:140px 1fr; gap:10px; height:100%; }
+    .mc-mail .lst { background:var(--ink-1); border:1px solid var(--line-soft); border-radius:8px; padding:8px 0; display:flex; flex-direction:column; overflow:hidden; }
+    .mc-mail .lst .h { padding:4px 12px 8px; border-bottom:1px solid var(--line-soft); font-size:10.5px; font-weight:700; color:#fff; }
+    .mc-mail .lst .it { padding:8px 12px; border-bottom:1px solid var(--line-soft); font-size:9.5px; }
+    .mc-mail .lst .it .t { color:#fff; font-weight:600; }
+    .mc-mail .lst .it .s { color:var(--ink-7); margin-top:2px; }
+    .mc-mail .lst .it.active { background:rgba(45,212,208,.07); border-left:2px solid var(--brand-cyan); padding-left:10px; }
+    .mc-mail .ed { background:var(--ink-1); border:1px solid var(--line-soft); border-radius:8px; padding:12px; display:flex; flex-direction:column; }
+    .mc-mail .ed .row { padding:5px 0; border-bottom:1px solid var(--line-soft); display:flex; gap:8px; align-items:center; font-size:9.5px; color:var(--ink-9); }
+    .mc-mail .ed .row .l { color:var(--ink-7); width:32px; }
+    .mc-mail .ed .row .chip { background:rgba(45,212,208,.16); color:var(--brand-cyan); padding:1px 7px; border-radius:999px; font-size:9px; }
+    .mc-mail .ed .subj { font-size:12px; color:#fff; font-weight:700; padding:8px 0; border-bottom:1px solid var(--line-soft); }
+    .mc-mail .ed .body { flex:1; padding:8px 0; font-size:10px; line-height:1.55; color:var(--ink-8); }
+    .mc-mail .ed .body .hl { color:#fff; }
+    .mc-mail .ed .body .ctab { display:inline-block; padding:3px 9px; background:var(--brand-gradient); color:#0B1A1A; border-radius:5px; font-weight:700; font-size:9px; margin:4px 0; }
+    .mc-mail .ed .bot { border-top:1px solid var(--line-soft); padding-top:8px; display:flex; align-items:center; gap:8px; }
+    .mc-mail .ed .bot .ai { background:rgba(168,224,99,.12); color:var(--brand-lime); padding:3px 8px; border-radius:999px; font-size:9px; font-weight:700; }
+    .mc-mail .ed .bot .send { margin-left:auto; background:var(--brand-gradient); color:#0B1A1A; padding:4px 10px; border-radius:5px; font-size:9.5px; font-weight:700; }
+
+    .feat-cards { padding:120px 0; border-top:1px solid var(--line-soft); }
+    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:64px; }
+    @media (max-width:900px) { .cards-grid { grid-template-columns:1fr 1fr; } }
+    @media (max-width:600px) { .cards-grid { grid-template-columns:1fr; } }
+    .f-card { background:var(--ink-2); border:1px solid var(--line-soft); border-radius:18px; padding:28px; box-shadow:var(--shadow-md), var(--shadow-inset); transition:all .25s var(--ease-out); }
+    .f-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-pop), var(--shadow-inset); background:var(--ink-3); }
+    .f-card .ico { width:44px; height:44px; border-radius:12px; background:rgba(45,212,208,.10); border:1px solid rgba(45,212,208,.22); color:var(--brand-cyan); display:grid; place-items:center; margin-bottom:20px; }
+    .f-card h4 { font-family:var(--font-display); font-size:28px; text-transform:uppercase; margin:0 0 10px; color:#fff; line-height:1; }
+    .f-card p { color:var(--ink-8); font-size:14.5px; margin:0; line-height:1.5; }
+
+    .next-strip { padding:48px 0; border-top:1px solid rgba(255,255,255,.08); }
+    .next-strip .inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .next-strip .lbl { font-size:12px; text-transform:uppercase; letter-spacing:.16em; color:var(--ink-7); font-weight:600; margin-right:8px; }
+    .next-strip a { padding:8px 18px; border-radius:999px; border:1px solid var(--line-soft); font-size:13px; color:var(--ink-9); background:var(--ink-2); transition:all .15s; }
+    .next-strip a:hover { border-color:var(--line-strong); color:#fff; background:var(--ink-3); }
+    .next-strip a.current { background:var(--brand-gradient); color:#0B1A1A; font-weight:700; border-color:transparent; }
+  </style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark"><img src="../assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a class="active" href="../platform">Platform</a>
+      <a href="../customers">Customers</a>
+      <a href="../about">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="../demo">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ======================== HERO ======================== -->
+<section class="p-hero">
+  <div class="glow-tl"></div>
+  <div class="container">
+    <span class="eyebrow with-rule reveal">Platform / Email &amp; SMS</span>
+    <h1 class="h1 reveal">Follow-ups that <span class="gradient-text">sound like you.</span></h1>
+    <p class="lead reveal">Broadcast, drip, and triggered sequences across email, SMS, and WhatsApp. AI Compose drafts every message in your brand voice — your team hits send or schedules it for the morning.</p>
+    <div class="ctas reveal">
+      <a class="btn btn-primary btn-lg" href="../demo">Book a demo <span class="btn-arrow">→</span></a>
+      <a class="btn btn-ghost btn-lg" href="../platform">See platform overview</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FEATURE DETAIL ======================== -->
+<section class="feat-section">
+  <div class="container">
+    <div class="feat-inner">
+      <!-- Copy -->
+      <div class="feat-copy reveal">
+        <span class="eyebrow with-rule">03 / Email &amp; SMS</span>
+        <h2 class="h2">Every message, perfectly timed.</h2>
+        <p class="lead">Broadcast, drip, and triggered sequences across email, SMS, and WhatsApp. AI Compose drafts every message in your brand voice — your team hits send or schedules it for the morning.</p>
+        <ul>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            AI Compose trained on your past replies
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Visual workflow builder · 60+ triggers
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Deliverability suite — SPF, DKIM, IP warming, blacklist alerts
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Real-time engagement scoring per recipient
+          </li>
+        </ul>
+        <div class="replaces-line">
+          <span class="lbl">Replaces</span>
+          <span class="chip">Mailchimp</span>
+          <span class="chip">Klaviyo</span>
+          <span class="chip">SendGrid</span>
+          <span class="chip">Twilio Studio</span>
+        </div>
+      </div>
+
+      <!-- Mock -->
+      <div class="mock reveal">
+        <div class="mock-bar">
+          <span class="d r"></span><span class="d y"></span><span class="d g"></span>
+          <span class="ttl">app.clientlink.io · campaigns / q2-nurture</span>
+        </div>
+        <div class="mock-body">
+          <div class="mc-mail">
+            <div class="lst">
+              <div class="h">Campaigns</div>
+              <div class="it active">
+                <div class="t">Q2 demo nurture</div>
+                <div class="s">Sent 4,820 · +38% open</div>
+              </div>
+              <div class="it">
+                <div class="t">Welcome · 5 emails</div>
+                <div class="s">312/day · 42% reply</div>
+              </div>
+              <div class="it">
+                <div class="t">Pricing recap</div>
+                <div class="s">Sent 1,140 · +19% click</div>
+              </div>
+              <div class="it">
+                <div class="t">Tier 1 renewal</div>
+                <div class="s">Draft · —</div>
+              </div>
+            </div>
+            <div class="ed">
+              <div class="row"><span class="l">From</span><span>mac@maximhair.com</span></div>
+              <div class="row"><span class="l">To</span><span class="chip">Demo booked · 312</span></div>
+              <div class="subj">Quick follow-up after your demo</div>
+              <div class="body">
+                Hi <span class="hl">{{first_name}}</span>,<br><br>
+                Wanted to follow up after we walked through the platform together. Here's a quick summary of what we covered and next steps for your team.<br><br>
+                <a class="ctab">View rollout →</a>
+              </div>
+              <div class="bot">
+                <span class="ai">✦ AI compose</span>
+                <span class="send">Schedule send ▾</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FEATURE CARDS ======================== -->
+<section class="feat-cards">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow with-rule">Features</span>
+      <h2 class="h2" style="margin-top:16px;">Every channel. One inbox.</h2>
+    </div>
+    <div class="cards-grid">
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14a1 1 0 011 1v9a1 1 0 01-1 1H3a1 1 0 01-1-1V6a1 1 0 011-1z" stroke="currentColor" stroke-width="1.7"/><path d="M2 6l8 5 8-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h4>AI Compose</h4>
+        <p>Draft replies in your brand voice. Train it on your best messages and it sounds just like you — every time.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="2" y="12" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="13" y="7" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.7"/><path d="M7 5.5h3.5a2 2 0 012 2V7M7 14.5h3.5a2 2 0 002-2V12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Visual workflows</h4>
+        <p>Map out every sequence on a drag-and-drop canvas. 60+ triggers, unlimited branches, no code.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4h12v9a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" stroke="currentColor" stroke-width="1.7"/><path d="M2 4h16M8 17h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Broadcast &amp; drip</h4>
+        <p>Send to a segment of thousands or a list of one. Schedule, personalize, A/B test.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 3h9a2 2 0 012 2v8a2 2 0 01-2 2H7l-4 3V5a2 2 0 012-2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>SMS &amp; WhatsApp</h4>
+        <p>Text messages and WhatsApp threads in the same inbox as email. One reply window for everything.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l2.5 5H18l-4 3 1.5 5L10 12l-5.5 3L6 10l-4-3h5.5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Deliverability suite</h4>
+        <p>SPF, DKIM, IP warming, bounce handling, and blacklist alerts — all managed for you.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 14l4-4 3 3 4-5 5 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Engagement scoring</h4>
+        <p>Know who's hot before they raise their hand. Score rises with every open, click, and reply.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================== NEXT STRIP ======================== -->
+<section class="next-strip">
+  <div class="container">
+    <div class="inner">
+      <span class="lbl">Platform</span>
+      <a href="../platform">Overview</a>
+      <a href="crm">CRM</a>
+      <a href="funnels">Funnels</a>
+      <a class="current" href="email">Email &amp; SMS</a>
+      <a href="booking">Booking</a>
+      <a href="automations">Automations</a>
+      <a href="reputation">Reputation</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FINAL CTA ======================== -->
+<section class="final-cta">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner">
+      <div class="row">
+        <div>
+          <span class="eyebrow with-rule reveal">Get started</span>
+          <h2 class="h2 reveal">Your messages, delivered.</h2>
+          <p class="lead reveal">We'll show you AI Compose live on your own content.</p>
+          <div class="ctas reveal" style="display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;">
+            <a class="btn btn-primary btn-lg" href="../demo">Book a demo <span class="btn-arrow">→</span></a>
+            <a class="btn btn-ghost btn-lg" href="../platform">See platform overview</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="../assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div><h5>Platform</h5><ul><li><a href="../platform">Overview</a></li><li><a href="../platform/crm">CRM</a></li><li><a href="../platform/funnels">Funnels</a></li><li><a href="../platform/email">Email &amp; SMS</a></li><li><a href="../platform/booking">Booking</a></li><li><a href="../platform/automations">Automations</a></li><li><a href="../platform/reputation">Reputation</a></li></ul></div>
+      <div><h5>Solutions</h5><ul><li><a href="#">Agencies</a></li><li><a href="#">Coaches</a></li><li><a href="#">Local services</a></li><li><a href="#">SaaS</a></li></ul></div>
+      <div><h5>Resources</h5><ul><li><a href="#">Templates</a></li><li><a href="#">Help center</a></li><li><a href="#">API docs</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="../about">About</a></li><li><a href="../customers">Customers</a></li><li><a href="#">Careers</a></li><li><a href="../demo">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links"><a href="../privacy">Privacy</a><a href="../terms">Terms</a><a href="../security">Security</a><a href="#">Status</a></div>
+    </div>
+  </div>
+</footer>
+<script src="../assets/scripts.js"></script>
+
+</body>
+</html>

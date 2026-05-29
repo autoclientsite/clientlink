@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reputation — Clientlink</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Page hero */
+    .p-hero { padding:180px 0 100px; position:relative; overflow:hidden; }
+    .p-hero h1 { max-width:16ch; margin:18px 0 0; }
+    .p-hero .lead { margin-top:24px; }
+    .p-hero .ctas { display:flex; gap:14px; margin-top:40px; flex-wrap:wrap; }
+
+    /* Feature section */
+    .feat-section { padding:140px 0; border-top:1px solid var(--line-soft); }
+    .feat-inner { display:grid; grid-template-columns:1fr 1.1fr; gap:80px; align-items:center; }
+    .feat-inner.flip { grid-template-columns:1.1fr 1fr; }
+    @media (max-width:1000px) { .feat-inner, .feat-inner.flip { grid-template-columns:1fr; gap:40px; } .feat-inner.flip .feat-copy { order:0; } }
+    .feat-copy .eyebrow { margin-bottom:24px; }
+    .feat-copy h2 { margin:0 0 24px; max-width:16ch; }
+    .feat-copy .lead { margin-bottom:32px; }
+    .feat-copy ul { list-style:none; padding:0; margin:0 0 36px; display:flex; flex-direction:column; gap:12px; }
+    .feat-copy ul li { display:flex; align-items:flex-start; gap:12px; font-size:15px; color:var(--ink-9); }
+    .feat-copy ul li svg { color:var(--brand-cyan); flex:none; margin-top:4px; }
+    .replaces-line { margin-top:20px; font-size:12.5px; color:var(--ink-7); display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+    .replaces-line .lbl { text-transform:uppercase; letter-spacing:.14em; font-weight:700; color:var(--brand-cyan); font-size:11px; }
+    .replaces-line .chip { padding:3px 9px; border:1px solid var(--line-strong); border-radius:999px; color:var(--ink-8); text-decoration:line-through; text-decoration-color:rgba(255,255,255,.3); }
+
+    /* Mock frame */
+    .mock { border:1px solid var(--line-soft); border-radius:18px; background:var(--ink-2); box-shadow:0 24px 48px -12px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06); overflow:hidden; position:relative; aspect-ratio:4/3; }
+    .mock::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.04) 0%, transparent 30%, transparent 80%, rgba(0,0,0,.25) 100%); }
+    .mock-bar { height:32px; display:flex; align-items:center; padding:0 12px; gap:6px; border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg, var(--ink-3) 0%, var(--ink-2) 100%); }
+    .mock-bar .d { width:9px; height:9px; border-radius:50%; }
+    .mock-bar .r { background:#ff5f57; } .mock-bar .y { background:#febc2e; } .mock-bar .g { background:#28c840; }
+    .mock-bar .ttl { margin:0 auto; font-family:monospace; font-size:10.5px; color:var(--ink-7); background:var(--ink-1); border:1px solid var(--line-soft); border-radius:6px; padding:3px 10px; }
+    .mock-body { padding:18px 20px; position:relative; height:calc(100% - 32px); }
+
+    /* Reputation inbox mock */
+    .mc-rep { display:grid; grid-template-columns:1fr 1.4fr; gap:10px; height:100%; }
+    .mc-rep .feed { background:var(--ink-1); border:1px solid var(--line-soft); border-radius:8px; padding:8px 0; display:flex; flex-direction:column; overflow:hidden; }
+    .mc-rep .feed .hd { padding:4px 12px 8px; border-bottom:1px solid var(--line-soft); font-size:10.5px; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px; }
+    .mc-rep .feed .hd .badge { margin-left:auto; background:var(--brand-gradient); color:#0B1A1A; font-size:8px; font-weight:800; padding:1px 6px; border-radius:999px; }
+    .mc-rep .rev { padding:8px 12px; border-bottom:1px solid var(--line-soft); font-size:9px; cursor:pointer; }
+    .mc-rep .rev.active { background:rgba(45,212,208,.07); border-left:2px solid var(--brand-cyan); padding-left:10px; }
+    .mc-rep .rev .stars { color:#A8E063; letter-spacing:.02em; margin-bottom:3px; }
+    .mc-rep .rev .text { color:var(--ink-9); line-height:1.4; margin-bottom:3px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .mc-rep .rev .meta { color:var(--ink-7); font-size:8.5px; }
+    .mc-rep .reply-panel { background:var(--ink-1); border:1px solid var(--line-soft); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:8px; }
+    .mc-rep .reply-panel .rh { font-size:10.5px; font-weight:700; color:#fff; padding-bottom:8px; border-bottom:1px solid var(--line-soft); display:flex; align-items:center; gap:6px; }
+    .mc-rep .reply-panel .stars-big { color:#A8E063; font-size:14px; letter-spacing:.04em; }
+    .mc-rep .reply-panel .review-text { font-size:10px; color:var(--ink-9); line-height:1.5; padding:8px; background:rgba(255,255,255,.03); border-radius:6px; border:1px solid var(--line-soft); }
+    .mc-rep .reply-panel .draft-lbl { font-size:9px; color:var(--brand-lime); font-weight:700; text-transform:uppercase; letter-spacing:.1em; }
+    .mc-rep .reply-panel .draft-text { font-size:10px; color:var(--ink-8); line-height:1.5; padding:8px; background:rgba(168,224,99,.05); border-radius:6px; border:1px solid rgba(168,224,99,.2); flex:1; }
+    .mc-rep .reply-panel .bot { display:flex; align-items:center; gap:8px; border-top:1px solid var(--line-soft); padding-top:8px; margin-top:auto; }
+    .mc-rep .reply-panel .bot .ai { background:rgba(168,224,99,.12); color:var(--brand-lime); padding:3px 8px; border-radius:999px; font-size:9px; font-weight:700; }
+    .mc-rep .reply-panel .bot .pub { margin-left:auto; background:var(--brand-gradient); color:#0B1A1A; padding:4px 10px; border-radius:5px; font-size:9.5px; font-weight:700; }
+
+    /* Stats row */
+    .stat-row { display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:1px solid var(--line-soft); border-radius:18px; background:var(--ink-2); overflow:hidden; margin-top:80px; }
+    .stat-row .s { padding:32px; border-right:1px solid var(--line-soft); }
+    .stat-row .s:last-child { border-right:none; }
+    .stat-row .v { font-family:var(--font-display); font-size:64px; line-height:1; color:#fff; }
+    .stat-row .v .pl { background:var(--brand-gradient-wide); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .stat-row .l { font-size:13px; color:var(--ink-8); margin-top:12px; max-width:28ch; }
+    @media (max-width:720px) { .stat-row { grid-template-columns:1fr; } .stat-row .s { border-right:none; border-bottom:1px solid var(--line-soft); } }
+
+    /* Feature cards grid */
+    .feat-cards { padding:120px 0; border-top:1px solid var(--line-soft); }
+    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:64px; }
+    @media (max-width:900px) { .cards-grid { grid-template-columns:1fr 1fr; } }
+    @media (max-width:600px) { .cards-grid { grid-template-columns:1fr; } }
+    .f-card { background:var(--ink-2); border:1px solid var(--line-soft); border-radius:18px; padding:28px; box-shadow:var(--shadow-md), var(--shadow-inset); transition:all .25s var(--ease-out); }
+    .f-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-pop), var(--shadow-inset); background:var(--ink-3); }
+    .f-card .ico { width:44px; height:44px; border-radius:12px; background:rgba(45,212,208,.10); border:1px solid rgba(45,212,208,.22); color:var(--brand-cyan); display:grid; place-items:center; margin-bottom:20px; }
+    .f-card h4 { font-family:var(--font-display); font-size:28px; text-transform:uppercase; margin:0 0 10px; color:#fff; line-height:1; }
+    .f-card p { color:var(--ink-8); font-size:14.5px; margin:0; line-height:1.5; }
+
+    /* Next feature nav strip */
+    .next-strip { padding:48px 0; border-top:1px solid rgba(255,255,255,.08); }
+    .next-strip .inner { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .next-strip .lbl { font-size:12px; text-transform:uppercase; letter-spacing:.16em; color:#7C7C85; font-weight:600; margin-right:8px; }
+    .next-strip a { padding:8px 18px; border-radius:999px; border:1px solid rgba(255,255,255,.08); font-size:13px; color:#D9D9DC; background:#1B1B1E; transition:all .15s; }
+    .next-strip a:hover { border-color:rgba(255,255,255,.16); color:#fff; background:#232327; }
+    .next-strip a.current { background:linear-gradient(135deg,#2DD4D0,#6FE0A8,#A8E063); color:#0B1A1A; font-weight:700; border-color:transparent; }
+  </style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark"><img src="../assets/clientlink-mark.png" alt="Clientlink"></span>
+      <span class="brand-name">Clientlink</span>
+    </a>
+    <nav class="nav-links">
+      <a class="active" href="../platform">Platform</a>
+      <a href="../customers">Customers</a>
+      <a href="../about">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-link btn-sm" href="https://crm.clientlink.io/">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="../demo">Book a demo<span class="btn-arrow">→</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ======================== HERO ======================== -->
+<section class="p-hero">
+  <div class="glow-tl"></div>
+  <div class="container">
+    <span class="eyebrow with-rule reveal">Platform / Reputation</span>
+    <h1 class="h1 reveal">Five stars, <span class="gradient-text">automatically.</span></h1>
+    <p class="lead reveal">Review requests, social listening, and a single reply inbox across every channel. Your team responds to every review without leaving Clientlink.</p>
+    <div class="ctas reveal">
+      <a class="btn btn-primary btn-lg" href="../demo">Book a demo <span class="btn-arrow">→</span></a>
+      <a class="btn btn-ghost btn-lg" href="../platform">See platform overview</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== STATS ======================== -->
+<section style="padding:0 0 0; border-top:1px solid var(--line-soft);">
+  <div class="container">
+    <div class="stat-row reveal">
+      <div class="s">
+        <div class="v">4.9<span class="pl">★</span></div>
+        <div class="l">Average rating across all connected review platforms</div>
+      </div>
+      <div class="s">
+        <div class="v"><span class="pl">3x</span></div>
+        <div class="l">More reviews from automated requests vs. manual follow-up</div>
+      </div>
+      <div class="s">
+        <div class="v"><span class="pl">1</span></div>
+        <div class="l">Inbox for Google, Facebook, Yelp, and more — replied from one place</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FEATURE DETAIL ======================== -->
+<section class="feat-section">
+  <div class="container">
+    <div class="feat-inner flip">
+      <!-- Mock (left) -->
+      <div class="mock reveal">
+        <div class="mock-bar">
+          <span class="d r"></span><span class="d y"></span><span class="d g"></span>
+          <span class="ttl">app.clientlink.io · reputation / inbox</span>
+        </div>
+        <div class="mock-body">
+          <div class="mc-rep">
+            <!-- Feed panel -->
+            <div class="feed">
+              <div class="hd">
+                Reviews
+                <span class="badge">3 new</span>
+              </div>
+              <div class="rev active">
+                <div class="stars">★★★★★</div>
+                <div class="text">Clientlink made the whole process seamless from day one...</div>
+                <div class="meta">Mac Fadra · Google · 2h ago</div>
+              </div>
+              <div class="rev">
+                <div class="stars">★★★★★</div>
+                <div class="text">Our no-show rate dropped and patients love the reminders...</div>
+                <div class="meta">Angel Negron · Google · 1d ago</div>
+              </div>
+              <div class="rev">
+                <div class="stars">★★★★</div>
+                <div class="text">Responsive team, great platform. Would love more templates.</div>
+                <div class="meta">John Kelly · Facebook · 2d ago</div>
+              </div>
+              <div class="rev">
+                <div class="stars">★★★★★</div>
+                <div class="text">Chairs stay full and team can focus on care.</div>
+                <div class="meta">Dr. Shintre · Yelp · 3d ago</div>
+              </div>
+            </div>
+            <!-- Reply panel -->
+            <div class="reply-panel">
+              <div class="rh">
+                Mac Fadra · Google
+                <span class="stars-big">★★★★★</span>
+              </div>
+              <div class="review-text">
+                "Clientlink made the whole process seamless. Every inquiry got a reply within minutes."
+              </div>
+              <div class="draft-lbl">✦ AI draft</div>
+              <div class="draft-text">
+                Thank you so much, Mac! We're thrilled to hear Clientlink has made a difference for your practice. Your feedback means the world to our team — we'll keep building!
+              </div>
+              <div class="bot">
+                <span class="ai">✦ AI compose</span>
+                <span class="pub">Publish reply ▾</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copy (right) -->
+      <div class="feat-copy reveal">
+        <span class="eyebrow with-rule">06 / Reputation</span>
+        <h2 class="h2">Every review answered. On every platform.</h2>
+        <p class="lead">Review requests, social listening, and a single reply inbox across every channel. Your team responds to every review without leaving Clientlink.</p>
+        <ul>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Automated review requests by SMS and email after every visit
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            AI drafts replies in your brand voice — one click to publish
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Monitor Google, Facebook, Yelp, and 20+ platforms from one inbox
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7.25" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Negative review alerts with suggested resolution flows
+          </li>
+        </ul>
+        <div class="replaces-line">
+          <span class="lbl">Replaces</span>
+          <span class="chip">Birdeye</span>
+          <span class="chip">Podium</span>
+          <span class="chip">ReviewTrackers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FEATURE CARDS ======================== -->
+<section class="feat-cards">
+  <div class="container">
+    <div class="reveal">
+      <span class="eyebrow with-rule">Features</span>
+      <h2 class="h2" style="margin-top:16px;">Your reputation, on autopilot.</h2>
+    </div>
+    <div class="cards-grid">
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2l1.8 5.5H17l-4.5 3.3 1.7 5.2L10 13l-4.2 3 1.7-5.2L3 7.5h5.2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        </div>
+        <h4>Automated requests</h4>
+        <p>Send review requests by SMS or email right after the visit. Timing and message are set once and run forever.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3l1.6 3.2L15 7.25l-2.5 2.44.59 3.44L10 11.4l-3.09 1.73.59-3.44L5 7.25l3.4-1.05z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 14v4M7 17h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h4>AI reply drafts</h4>
+        <p>Clientlink drafts a thoughtful reply in your brand voice for every review. Your team approves in one click.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M2 8h16" stroke="currentColor" stroke-width="1.5"/><path d="M7 12h2M11 12h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Unified inbox</h4>
+        <p>Google, Facebook, Yelp, Healthgrades, and more — all reviews in one place, sorted by urgency.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="10" cy="14" r="1.5" fill="currentColor"/><circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.7"/></svg>
+        </div>
+        <h4>Negative alerts</h4>
+        <p>Get notified instantly when a low-star review lands. Suggested resolution flow kicks in automatically.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.25" stroke="currentColor" stroke-width="1.7"/><path d="M10 6v4l2.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 3.5C6.4 2.6 7.9 2 10 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Social listening</h4>
+        <p>Monitor brand mentions across social platforms and respond before a small comment becomes a big problem.</p>
+      </div>
+
+      <div class="f-card reveal">
+        <div class="ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 15l4.5-5.5 3.5 3.5 3-4 4 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 4h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h4>Review analytics</h4>
+        <p>Track your average rating, response rate, and review volume over time. Export for reporting.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================== NEXT STRIP ======================== -->
+<section class="next-strip">
+  <div class="container">
+    <div class="inner">
+      <span class="lbl">Platform</span>
+      <a href="../platform">Overview</a>
+      <a href="crm">CRM</a>
+      <a href="funnels">Funnels</a>
+      <a href="email">Email &amp; SMS</a>
+      <a href="booking">Booking</a>
+      <a href="automations">Automations</a>
+      <a class="current" href="reputation">Reputation</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FINAL CTA ======================== -->
+<section class="final-cta">
+  <div class="bg-glow"></div>
+  <div class="container">
+    <div class="inner">
+      <div class="row">
+        <div>
+          <span class="eyebrow with-rule reveal">Get started</span>
+          <h2 class="h2 reveal">Start collecting five-star reviews.</h2>
+          <p class="lead reveal">We'll show you the full review request flow and wire it to your real customer data during the demo.</p>
+          <div class="ctas reveal" style="display:flex;gap:14px;margin-top:40px;flex-wrap:wrap;">
+            <a class="btn btn-primary btn-lg" href="../demo">Book a demo <span class="btn-arrow">→</span></a>
+            <a class="btn btn-ghost btn-lg" href="../platform">See platform overview</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="brandcol">
+        <div class="brand">
+          <span class="brand-mark"><img src="../assets/clientlink-mark.png" alt=""></span>
+          <span class="brand-name">Clientlink</span>
+        </div>
+        <p>The all-in-one growth platform for teams that want to spend less time stitching tools and more time closing.</p>
+      </div>
+      <div><h5>Platform</h5><ul><li><a href="../platform">Overview</a></li><li><a href="../platform/crm">CRM</a></li><li><a href="../platform/funnels">Funnels</a></li><li><a href="../platform/email">Email &amp; SMS</a></li><li><a href="../platform/booking">Booking</a></li><li><a href="../platform/automations">Automations</a></li><li><a href="../platform/reputation">Reputation</a></li></ul></div>
+      <div><h5>Solutions</h5><ul><li><a href="#">Agencies</a></li><li><a href="#">Coaches</a></li><li><a href="#">Local services</a></li><li><a href="#">SaaS</a></li></ul></div>
+      <div><h5>Resources</h5><ul><li><a href="#">Templates</a></li><li><a href="#">Help center</a></li><li><a href="#">API docs</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="../about">About</a></li><li><a href="../customers">Customers</a></li><li><a href="#">Careers</a></li><li><a href="../demo">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copy">© 2026 Clientlink, Inc. · Built for growth.</div>
+      <div class="links"><a href="../privacy">Privacy</a><a href="../terms">Terms</a><a href="../security">Security</a><a href="#">Status</a></div>
+    </div>
+  </div>
+</footer>
+<script src="../assets/scripts.js"></script>
+
+</body>
+</html>
